@@ -3,7 +3,7 @@
 Sistema integral de gestión para la guardería de la Universidad Nacional de La Rioja (UNLaR). 
 
 ## 🚀 Descripción
-Plataforma orientada a tutores y personal docente que permite el seguimiento de infantes, control de estados (comiendo, durmiendo, jugando) y monitoreo de seguridad en tiempo real.
+Plataforma orientada a estudiantes y personal docente/nodocente que permite el seguimiento de infantes, control de estados y monitoreo de seguridad en tiempo real.
 
 ## 🛠 Tecnologías Utilizadas
 - **Backend:** Java, Spring Boot
