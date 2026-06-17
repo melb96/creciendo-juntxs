@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creciendo Juntxs - Panel Principal</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="navbar-brand-box">
+        <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
+            <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
+        </a>
+        <div style="width: 2px; height: 32px; background-color: #e0e0e0;"></div>
+        <a th:href="@{/home}" style="text-decoration: none;">
+            <div>
+                <h1 class="project-text-logo">Creciendo Juntxs</h1>
+                <p class="navbar-subtitle">Guardería - Universidad Nacional de La Rioja</p>
+            </div>
+        </a>
+    </div>
+    <a href="/logout" class="navbar-logout-btn">🚪 Salir</a>
+</nav>
+
+<div class="container">
+    <div class="user-info-bar">
+        <div>👤 Sesión activa: <strong th:text="${usuarioEmail}"></strong></div>
+        <div>Rol: 
+            <span th:text="${usuarioRol}" 
+                  th:class="'badge-role ' + (${usuarioRol} == 'ADMIN' ? 'badge-admin' : (${usuarioRol} == 'OPERADOR' ? 'badge-operador' : 'badge-tutor'))">
+            </span>
+        </div>
+    </div>
+
+    <h2>Bienvenido al Panel de Control</h2>
+    <p style="color: #555; margin-bottom: 25px;">Seleccione el módulo al que desea ingresar:</p>
+    
+    <div class="grid-menu">
+        <a href="/tutores" class="card" th:if="${usuarioRol == 'ADMIN' || usuarioRol == 'OPERADOR'}">
+            <h3>📁 Legajo Tutores</h3>
+            <p>Registro, consulta y administración de responsables parentales universitarios.</p>
+        </a>
+
+        <a href="/infantes" class="card" th:if="${usuarioRol == 'ADMIN' || usuarioRol == 'OPERADOR'}">
+            <h3>👶 Legajo Infantes</h3>
+            <p>Inscripción interna de niños/as y vinculación relacional con sus tutores.</p>
+        </a>
+
+        <a href="/asistencias" class="card" th:if="${usuarioRol == 'ADMIN' || usuarioRol == 'OPERADOR'}">
+            <h3>📝 Asistencia Diaria</h3>
+            <p>Control de presentismo, ingresos, egresos y actualización de bitácoras de sala.</p>
+        </a>
+
+        <a href="/monitoreo" class="card" th:if="${usuarioRol == 'ADMIN' || usuarioRol == 'OPERADOR' || usuarioRol == 'TUTOR'}">
+            <h3>📹 Espacios Comunes</h3>
+            <p>Visualización segura en tiempo real del área de juegos y salas para el núcleo familiar.</p>
+        </a>
+
+        <a href="/usuarios" class="card card-admin" th:if="${usuarioRol == 'ADMIN'}">
+            <h3>🔐 Usuarios y Roles</h3>
+            <p>Administración de credenciales de acceso, roles y permisos jerárquicos del sistema.</p>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

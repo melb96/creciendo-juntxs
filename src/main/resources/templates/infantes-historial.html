@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creciendo Juntxs - Historial de Asistencia</title>
+    <link rel="stylesheet" th:href="@{/css/infantes-historial.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand-box">
+            <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
+                <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
+            </a>
+            <div style="width: 2px; height: 32px; background-color: #e0e0e0;"></div>
+            <a th:href="@{/home}" style="text-decoration: none;">
+                <div>
+                    <h1 class="project-text-logo">Creciendo Juntxs</h1>
+                    <p class="navbar-subtitle">Guardería - Universidad Nacional de La Rioja</p>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Historial Cronológico de Asistencias</h2>
+        <div class="sub">
+            👶 Infante: <strong th:text="${infante.apellido} + ', ' + ${infante.nombre}" style="color: #145D96;"></strong> |
+            🪪 DNI: <span th:text="${infante.dni}" style="font-weight: bold; color: #333;"></span>
+        </div>
+
+        <a href="/infantes" class="btn-back">⬅ Volver a Legajos</a>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Hora Entrada</th>
+                        <th>Hora Salida</th>
+                        <th>Bitácora de Actividades / Novedades</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="ast : ${historial}">
+                        <td th:text="${ast.fecha}" style="font-weight: bold;"></td>
+                        <td th:text="${ast.horaEntrada}" style="color: #28a745; font-weight: bold;"></td>
+                        <td th:text="${ast.horaSalida != null ? ast.horaSalida : 'En sala / Activo'}"
+                            th:style="${ast.horaSalida == null ? 'color: #ffc107; font-weight: bold;' : 'color: #dc3545;'}">
+                        </td>
+                        <td class="bitacora-text" th:text="${ast.bitacoraActividades}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(historial)}">
+                        <td colspan="4" style="text-align: center; color: #999; padding: 20px;">Este infante no registra asistencias cargadas en el sistema.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

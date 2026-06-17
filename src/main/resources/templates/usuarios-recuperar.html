@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creciendo Juntxs - Recuperar Acceso</title>
+    <link rel="stylesheet" th:href="@{/css/usuarios-recuperar.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand-box">
+            <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
+                <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
+            </a>
+            <div style="width: 2px; height: 32px; background-color: #e0e0e0;"></div>
+            <a th:href="@{/home}" style="text-decoration: none;">
+                <div>
+                    <h1 class="project-text-logo">Creciendo Juntxs</h1>
+                    <p class="navbar-subtitle">Guardería - Universidad Nacional de La Rioja</p>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        <div class="form-container">
+            <h2>Recuperar Contraseña</h2>
+            <div class="sub">Verificación por DNI del Legajo de Tutor</div>
+
+            <div class="error-msg" th:if="${error}" th:text="${error}"></div>
+
+            <form action="/usuarios/recuperar" method="POST">
+                <div class="form-group">
+                    <label for="email">Correo Electrónico (Usuario):</label>
+                    <input type="email" id="email" name="email" required placeholder="Ej: juan@gmail.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="dni">DNI del Tutor Titular:</label>
+                    <input type="text" id="dni" name="dni" required placeholder="Ingrese su número de documento">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Nueva Contraseña de Acceso:</label>
+                    <input type="password" id="password" name="nuevaPassword" required placeholder="Mínimo 4 caracteres">
+                </div>
+
+                <button type="submit" class="btn-submit">🔒 Restablecer Acceso</button>
+                <a href="/login" class="btn-cancel">Volver al Login</a>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creciendo Juntxs - Espacios Comunes</title>
+    <link rel="stylesheet" th:href="@{/css/monitoreo.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand-box">
+            <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
+                <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
+            </a>
+            <div style="width: 2px; height: 32px; background-color: #e0e0e0;"></div>
+            <a th:href="@{/home}" style="text-decoration: none;">
+                <div>
+                    <h1 class="project-text-logo">Creciendo Juntxs</h1>
+                    <p class="navbar-subtitle">Guardería - Universidad Nacional de La Rioja</p>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Centro de Monitoreo de Espacios Comunes</h2>
+        <div class="sub" style="margin-bottom: 25px;">Streaming Seguro para Personal y Tutor Autorizado</div>
+
+        <a href="/home" class="btn-back">🏠 Volver al Panel Principal</a>
+
+        <div th:if="${usuarioRol == 'TUTOR' && infantes != null}" class="tutor-status-box">
+            <h3 style="margin-top: 0; color: #333; font-size: 16px; margin-bottom: 5px;">📊 Reporte de Actividad en Tiempo Real</h3>
+            <div th:each="infante : ${infantes}" class="hijo-item-row">
+                <span style="font-size: 20px;">👶</span>
+                <div>
+                    <span style="font-size: 15px; font-weight: bold; color: #222;" th:text="${infante.nombre} + ' ' + ${infante.apellido}"></span>
+                    <span style="margin-left: 10px;">Estado:
+                        <span th:text="${infante.estadoActual}" th:class="'child-badge-status ' + (${infante.estadoActual} == 'Comiendo' ? 'status-comiendo' : (${infante.estadoActual} == 'Durmiendo' ? 'status-durmiendo' : (${infante.estadoActual} == 'Jugando' ? 'status-jugando' : (${infante.estadoActual} == 'Retirado' ? 'status-retirado' : (${infante.estadoActual} == 'Sin Ingresar' ? 'status-sin-ingresar' : 'status-sala')))))"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="gabinete-grid">
+            <div class="panel-camaras">
+                <h3>🎥 Canales Disponibles</h3>
+                <a href="#" class="cam-link active" onclick="cambiarCamara('sala1')">📷 Sala Juegos</a>
+                <a href="#" class="cam-link" onclick="cambiarCamara('patio')">📷 Patio (Offline)</a>
+            </div>
+
+            <div>
+                <th:block th:with="totalHijos=${infantes != null ? infantes.size() : 0}, hijosAfuera=${infantes != null ? infantes.?[estadoActual == 'Sin Ingresar' || estadoActual == 'Retirado' || estadoActual == 'Ausente'].size() : 0}, todosAfuera=${totalHijos > 0 && totalHijos == hijosAfuera}">
+                    <div th:if="${!todosAfuera}">
+                        <div class="status-badge"><span class="rec-dot"></span> En Vivo - Transmitiendo</div>
+                        <div class="video-container">
+                            <video id="webcamPlayer" autoplay playsinline muted>
+                                <source src="http://IP_DE_TU_PC:8080/stream" type="application/x-mpegURL">
+                                Tu navegador no soporta streaming de video.
+                            </video>
+                        </div>
+                    </div>
+                    <div th:if="${todosAfuera}" class="camara-bloqueda">
+                        <span style="font-size: 40px; margin-bottom: 10px;">🔒</span>
+                        <h4 style="margin: 0 0 5px 0; font-size: 16px;">Transmisión Deshabilitada</h4>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/monitoreo.js}"></script>
+</body>
+</html>

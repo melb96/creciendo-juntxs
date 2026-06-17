@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creciendo Juntxs - Gestión de Usuarios</title>
+    <link rel="stylesheet" th:href="@{/css/usuarios-lista.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand-box">
+            <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
+                <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
+            </a>
+            <div style="width: 2px; height: 32px; background-color: #e0e0e0;"></div>
+            <a th:href="@{/home}" style="text-decoration: none;">
+                <div>
+                    <h1 class="project-text-logo">Creciendo Juntxs</h1>
+                    <p class="navbar-subtitle">Guardería - Universidad Nacional de La Rioja</p>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Control de Usuarios y Roles</h2>
+
+        <a href="/usuarios/nuevo" class="btn">➕ Crear Nuevo Usuario</a>
+        <a href="/home" class="btn btn-secondary">🏠 Volver al Inicio</a>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Correo Electrónico (Login)</th>
+                        <th>Rol de Acceso</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="u : ${lista}">
+                        <td th:text="${u.id}"></td>
+                        <td th:text="${u.email}" style="font-weight: bold;"></td>
+                        <td>
+                            <span th:text="${u.role}"
+                                th:class="'badge-role ' + (${u.role} == 'ADMIN' ? 'role-admin' : (${u.role} == 'OPERADOR' ? 'role-operador' : 'role-tutor'))">
+                            </span>
+                        </td>
+                        <td>
+                            <div class="actions-container">
+                                <a th:href="@{/usuarios/editar/{id}(id=${u.id})}" class="btn-action-grilla btn-editar">✏️ Editar</a>
+                                <a th:href="@{/usuarios/eliminar/{id}(id=${u.id})}" class="btn-action-grilla btn-eliminar"
+                                    onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario de forma permanente?');">🗑️ Eliminar</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(lista)}">
+                        <td colspan="4" style="text-align: center; color: #999; padding: 20px;">No hay usuarios registrados en el sistema.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

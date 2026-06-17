@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creciendo Juntxs - Control de Asistencia</title>
+    <link rel="stylesheet" th:href="@{/css/asistencias.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand-box">
+            <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
+                <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
+            </a>
+            <div style="width: 2px; height: 32px; background-color: #e0e0e0;"></div>
+            <a th:href="@{/home}" style="text-decoration: none;">
+                <div>
+                    <h1 class="project-text-logo">Creciendo Juntxs</h1>
+                    <p class="navbar-subtitle">Guardería - Universidad Nacional de La Rioja</p>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Control de Asistencia Diaria</h2>
+        <div class="fecha-badge">📅 Fecha del sistema: <span th:text="${fechaHoy}"></span></div>
+        <a href="/home" class="btn-back">🏠 Volver al Inicio</a>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Niño/a</th>
+                        <th>Responsable (Tutor)</th>
+                        <th>Estado Actual</th>
+                        <th>Ingreso</th>
+                        <th>Egreso</th>
+                        <th>Acciones / Notas de Bitácora</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="infante : ${infantes}">
+                        <td th:text="${infante.apellido} + ', ' + ${infante.nombre}" style="font-weight: bold;"></td>
+                        <td th:text="${infante.tutor.apellido} + ', ' + ${infante.tutor.nombre}"></td>
+
+                        <td>
+                            <span th:text="${infante.estadoActual}" th:class="'status ' + (${infante.estadoActual} == 'Comiendo' ? 'status-comiendo' : (${infante.estadoActual} == 'Durmiendo' ? 'status-durmiendo' : (${infante.estadoActual} == 'Jugando' ? 'status-jugando' : (${infante.estadoActual} == 'Retirado' ? 'status-retirado' : (${infante.estadoActual} == 'En Sala' ? 'status-sala' : 'status-sin-ingresar')))))"></span>
+                        </td>
+
+                        <th:block th:with="asistenciasDelNiño=${asistenciasHoy.?[infante.id == __${infante.id}__]}, tieneAsistencia=!${asistenciasDelNiño.isEmpty()}, ultimaAsistencia=${tieneAsistencia ? asistenciasDelNiño[asistenciasDelNiño.size() - 1] : null}, estaAdentro=${tieneAsistencia && ultimaAsistencia.horaSalida == null}, yaSalio=${tieneAsistencia && ultimaAsistencia.horaSalida != null}">
+
+                            <td th:if="${!tieneAsistencia}" colspan="2">-</td>
+                            <td th:if="${!tieneAsistencia}">
+                                <form th:action="@{/asistencias/ingreso}" method="POST" style="margin:0;">
+                                    <input type="hidden" name="infanteId" th:value="${infante.id}">
+                                    <button type="submit" class="btn-action btn-ingreso">▶ Registrar Ingreso</button>
+                                </form>
+                            </td>
+
+                            <td th:if="${estaAdentro}" th:text="${ultimaAsistencia.horaEntrada}"></td>
+                            <td th:if="${estaAdentro}">-</td>
+                            <td th:if="${estaAdentro}">
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <form th:action="@{/asistencias/egreso}" method="POST" style="margin:0; display: flex; gap: 5px; align-items: center;">
+                                        <input type="hidden" name="infanteId" th:value="${infante.id}">
+                                        <input type="text" name="bitacora" class="input-bitacora" placeholder="Notas de la bitácora...">
+                                        <button type="submit" class="btn-action btn-egreso">■ Registrar Salida</button>
+                                    </form>
+                                    <button type="button" class="btn-action btn-alerta" 
+                                        th:onclick="dispararAlertaWhatsApp([[${infante.tutor.telefono}]], [[${infante.nombre}]], [[${infante.apellido}]])">
+                                        🚨 Alerta Tutor
+                                    </button>
+                                </div>
+                            </td>
+
+                            <td th:if="${yaSalio}" th:text="${ultimaAsistencia.horaEntrada}"></td>
+                            <td th:if="${yaSalio}" th:text="${ultimaAsistencia.horaSalida}"></td>
+                            <td th:if="${yaSalio}">
+                                <div style="display: flex; flex-direction: column; gap: 5px;">
+                                    <span th:text="${ultimaAsistencia.bitacoraActividades}" class="bitacora-display"></span>
+                                    <form th:action="@{/asistencias/ingreso}" method="POST" style="margin:5px 0 0 0;">
+                                        <input type="hidden" name="infanteId" th:value="${infante.id}">
+                                        <button type="submit" class="btn-action btn-ingreso" style="padding: 4px 8px; font-size: 11px;">▶ Re-ingresar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </th:block>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script th:src="@{/js/asistencias.js}"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creciendo Juntxs - Lista de Infantes</title>
+    <link rel="stylesheet" th:href="@{/css/infantes-lista.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand-box">
+            <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
+                <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
+            </a>
+            <div style="width: 2px; height: 32px; background-color: #e0e0e0;"></div>
+            <a th:href="@{/home}" style="text-decoration: none;">
+                <div>
+                    <h1 class="project-text-logo">Creciendo Juntxs</h1>
+                    <p class="navbar-subtitle">Guardería - Universidad Nacional de La Rioja</p>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Legajo de Infantes (Niños/as)</h2>
+
+        <a href="/infantes/nuevo" class="btn">➕ Inscribir Nuevo Infante</a>
+        <a href="/home" class="btn btn-secondary">🏠 Volver al Inicio</a>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre Completo</th>
+                        <th>DNI</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Responsable Parental (Tutor)</th>
+                        <th>Observaciones Médicas</th>
+                        <th>Estado Diario</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="i : ${lista}">
+                        <td th:text="${i.id}"></td>
+                        <td th:text="${i.apellido} + ', ' + ${i.nombre}" style="font-weight: bold;"></td>
+                        <td th:text="${i.dni}"></td>
+                        <td th:text="${i.fechaNacimiento}"></td>
+                        <td th:text="${i.tutor.apellido} + ', ' + ${i.tutor.nombre} + ' (' + ${i.tutor.relacionUniversitaria} + ')'"></td>
+                        <td th:text="${i.observacionesMedicas}"></td>
+                        <td>
+                            <form action="/infantes/cambiar-estado" method="POST" style="margin:0; padding:0;">
+                                <input type="hidden" name="infanteId" th:value="${i.id}" />
+                                <select name="nuevoEstado" class="select-estado" onchange="this.form.submit()"
+                                    th:disabled="${i.estadoActual == 'Sin Ingresar' || i.estadoActual == 'Retirado'}">
+                                    <option value="Sin Ingresar" th:selected="${i.estadoActual == 'Sin Ingresar'}" th:if="${i.estadoActual == 'Sin Ingresar'}">⚪ Sin Ingresar</option>
+                                    <option value="En Sala" th:selected="${i.estadoActual == 'En Sala'}">🏠 En Sala</option>
+                                    <option value="Comiendo" th:selected="${i.estadoActual == 'Comiendo'}">🥣 Comiendo</option>
+                                    <option value="Durmiendo" th:selected="${i.estadoActual == 'Durmiendo'}">😴 Durmiendo</option>
+                                    <option value="Jugando" th:selected="${i.estadoActual == 'Jugando'}">🧸 Jugando</option>
+                                    <option value="Retirado" th:selected="${i.estadoActual == 'Retirado'}" th:if="${i.estadoActual == 'Retirado'}">🚗 Retirado</option>
+                                </select>
+                            </form>
+                        </td>
+                        <td>
+                            <div class="actions-container">
+                                <a th:href="@{/infantes/historial/{id}(id=${i.id})}" class="btn-action-grilla btn-historial">📋 Historial</a>
+                                <a th:href="@{/infantes/editar/{id}(id=${i.id})}" class="btn-action-grilla btn-editar">✏️ Editar</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(lista)}">
+                        <td colspan="8" style="text-align: center; color: #999; padding: 20px;">No hay infantes registrados en el sistema.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

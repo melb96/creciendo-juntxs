@@ -1,0 +1,38 @@
+body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0; }
+
+/* Navbar */
+.navbar { background-color: #ffffff; border-bottom: 3px solid #145D96; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); }
+.navbar-brand-box { display: flex; align-items: center; gap: 15px; }
+.logo-img { height: 45px; width: auto; object-fit: contain; }
+.project-text-logo { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 24px; font-weight: 800; color: #145D96; letter-spacing: -0.5px; text-transform: uppercase; margin: 0; }
+.navbar-subtitle { font-size: 11px; color: #666; margin: 2px 0 0 0; font-weight: bold; letter-spacing: 0.5px; }
+
+/* Contenedores */
+.container { max-width: 1150px; margin: 20px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); box-sizing: border-box; }
+h2 { color: #333; margin-top: 0; font-size: 22px; }
+
+/* Botones */
+.btn { display: inline-block; padding: 10px 15px; background-color: #145D96; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; margin-bottom: 20px; font-weight: bold; transition: background-color 0.2s; }
+.btn:hover { background-color: #0d436d; }
+.btn-secondary { background-color: #6c757d; }
+.btn-secondary:hover { background-color: #5a6268; }
+
+/* Tabla */
+.table-responsive { width: 100%; overflow-x: auto; border-radius: 6px; border: 1px solid #ddd; margin-top: 10px; }
+table { width: 100%; border-collapse: collapse; min-width: 800px; }
+th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+th { background-color: #f8f9fa; color: #333; }
+tr:hover { background-color: #f1f1f1; }
+
+/* Acciones */
+.btn-action-grilla { display: inline-block; text-decoration: none; border-radius: 4px; font-size: 13px; font-weight: bold; text-align: center; padding: 6px 10px; margin: 0 2px; }
+.btn-crear { background-color: #007bff; color: white; }
+.btn-editar { background-color: #ffc107; color: #212529; }
+.btn-eliminar { background-color: #dc3545; color: white; }
+.badge-activo { display: inline-block; padding: 6px 10px; background-color: #28a745; color: white; border-radius: 4px; font-size: 12px; font-weight: bold; }
+
+@media (max-width: 768px) {
+    .container { margin: 10px; width: calc(100% - 20px); padding: 15px; }
+    .btn { display: block; text-align: center; margin-bottom: 10px; }
+    .btn-action-grilla { display: block; margin: 5px 0 !important; }
+}

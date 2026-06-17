@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creciendo Juntxs - Inscribir Infante</title>
+    <link rel="stylesheet" th:href="@{/css/infantes-formulario.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand-box">
+            <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
+                <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
+            </a>
+            <div style="width: 2px; height: 32px; background-color: #e0e0e0;"></div>
+            <a th:href="@{/home}" style="text-decoration: none;">
+                <div>
+                    <h1 class="project-text-logo">Creciendo Juntxs</h1>
+                    <p class="navbar-subtitle">Guardería - Universidad Nacional de La Rioja</p>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        <div class="form-container">
+            <h2 th:text="${infante.id != null} ? 'Formulario: Modificar Datos del Infante' : 'Formulario: Inscripción de Infante'"></h2>
+
+            <div class="error-msg" th:if="${error}" th:text="${error}"></div>
+
+            <form th:action="${infante.id != null} ? @{/infantes/actualizar} : @{/infantes/guardar}" th:object="${infante}" method="POST">
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="form-group">
+                    <label for="nombre">Nombre del Niño/a:</label>
+                    <input type="text" id="nombre" th:field="*{nombre}" required placeholder="Ej: Benjamín">
+                </div>
+                <div class="form-group">
+                    <label for="apellido">Apellido del Niño/a:</label>
+                    <input type="text" id="apellido" th:field="*{apellido}" required placeholder="Ej: Pérez">
+                </div>
+                <div class="form-group">
+                    <label for="dni">DNI (Sin puntos):</label>
+                    <input type="text" id="dni" th:field="*{dni}" required placeholder="Ej: 58123456" th:readonly="${infante.id != null}">
+                </div>
+                <div class="form-group">
+                    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" id="fechaNacimiento" th:field="*{fechaNacimiento}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tutorId">Responsable Parental asignado:</label>
+                    <select id="tutorId" name="tutorId" required>
+                        <option value="">-- Seleccione un tutor de la lista --</option>
+                        <option th:each="t : ${tutores}" th:value="${t.id}"
+                            th:text="${t.apellido} + ', ' + ${t.nombre} + ' - DNI: ' + ${t.dni}"
+                            th:selected="${infante.tutor != null && t.id == infante.tutor.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="observacionesMedicas">Observaciones Médicas / Alergias:</label>
+                    <textarea id="observacionesMedicas" th:field="*{observacionesMedicas}" placeholder="Ej: Alérgico al maní..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit" th:text="${infante.id != null} ? '🔒 Guardar Cambios' : '➕ Inscribir Niño/a'"></button>
+                <a href="/infantes" class="btn-cancel">Volver a la Lista</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
