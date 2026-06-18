@@ -14,8 +14,8 @@
             <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
                 <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
             </a>
-            <div style="width: 2px; height: 32px; background-color: #e0e0e0;"></div>
-            <a th:href="@{/home}" style="text-decoration: none;">
+            <div class="navbar-divider"></div>
+            <a th:href="@{/home}" class="navbar-link-home">
                 <div>
                     <h1 class="project-text-logo">Creciendo Juntxs</h1>
                     <p class="navbar-subtitle">Guardería - Universidad Nacional de La Rioja</p>
@@ -31,7 +31,8 @@
 
             <div class="error-msg" th:if="${error}" th:text="${error}"></div>
 
-            <form action="/usuarios/recuperar" method="POST">
+            <form th:action="@{/usuarios/recuperar}" method="POST">
+                
                 <div class="form-group">
                     <label for="email">Correo Electrónico (Usuario):</label>
                     <input type="email" id="email" name="email" required placeholder="Ej: juan@gmail.com">

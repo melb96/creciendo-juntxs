@@ -39,11 +39,10 @@ public class Infante {
     @Column(length = 255)
     private String observacionesMedicas;
     @Column(nullable = false, length = 50)
-    private String estadoActual = "En Sala"; // Valores: "En Sala", "Comiendo", "Durmiendo", "Jugando"
+    private String estadoActual = "En Sala";
     @ManyToOne
     @JoinColumn(name = "tutor_id", nullable = false)
     private Tutor tutor;
-    // Adentro de Infante.java
-@OneToMany(mappedBy = "infante", cascade = CascadeType.REMOVE, orphanRemoval = true)
-private List<Asistencia> asistencias;
+    @OneToMany(mappedBy = "infante", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Asistencia> asistencias;
 }

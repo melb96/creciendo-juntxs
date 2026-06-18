@@ -30,8 +30,7 @@ public class Usuario {
     private String password;
     @Column(nullable = false, length = 30)
     private String role;
-    // Reemplaza el bloque de la relación @OneToOne
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}) 
+    @OneToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
     @JoinColumn(name = "tutor_id", nullable = true)
     private Tutor tutor;
 

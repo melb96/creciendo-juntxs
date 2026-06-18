@@ -36,11 +36,8 @@ public class Tutor {
     private String telefono;
     @Column(nullable = false, length = 100)
     private String relacionUniversitaria;
-    // Adentro de Tutor.java
     @OneToMany(mappedBy = "tutor", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Infante> infantes;
-    // Dentro de Tutor.java
-    // Reemplaza el bloque de la relación @OneToOne
     @OneToOne(mappedBy = "tutor") 
     private Usuario usuario;
 }

@@ -34,7 +34,7 @@ public class Asistencia {
     private LocalTime horaSalida;
     @Column(length = 255)
     private String bitacoraActividades;
-    
+
     @ManyToOne
     @JoinColumn(name = "infante_id", nullable = false)
     private Infante infante;

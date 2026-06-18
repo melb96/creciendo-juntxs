@@ -22,19 +22,16 @@ public class InfanteController {
 
     private final InfanteService infanteService;
 
-    // Endpoint para registrar: POST http://localhost:8080/api/infantes/registrar?tutorId=1
     @PostMapping("/registrar")
     public String registrar(@RequestBody Infante infante, @RequestParam Long tutorId) {
         return infanteService.registrarInfante(infante, tutorId);
     }
 
-    // Endpoint para listar todos: GET http://localhost:8080/api/infantes
     @GetMapping
     public List<Infante> listarTodos() {
         return infanteService.obtenerTodos();
     }
 
-    // Endpoint para listar por Tutor: GET http://localhost:8080/api/infantes/tutor/1
     @GetMapping("/tutor/{tutorId}")
     public List<Infante> listarPorTutor(@PathVariable Long tutorId) {
         return infanteService.obtenerPorTutor(tutorId);

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" 
+      lang="es">
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
@@ -14,8 +16,8 @@
             <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
                 <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
             </a>
-            <div style="width: 2px; height: 32px; background-color: #e0e0e0;"></div>
-            <a th:href="@{/home}" style="text-decoration: none;">
+            <div class="navbar-divider"></div>
+            <a th:href="@{/home}" class="navbar-link-home">
                 <div>
                     <h1 class="project-text-logo">Creciendo Juntxs</h1>
                     <p class="navbar-subtitle">Guardería - Universidad Nacional de La Rioja</p>
@@ -26,18 +28,20 @@
 
     <div class="container">
         <h2>Centro de Monitoreo de Espacios Comunes</h2>
-        <div class="sub" style="margin-bottom: 25px;">Streaming Seguro para Personal y Tutor Autorizado</div>
+        <div class="sub-title">Streaming Seguro para Personal y Tutor Autorizado</div>
 
         <a href="/home" class="btn-back">🏠 Volver al Panel Principal</a>
 
-        <div th:if="${usuarioRol == 'TUTOR' && infantes != null}" class="tutor-status-box">
-            <h3 style="margin-top: 0; color: #333; font-size: 16px; margin-bottom: 5px;">📊 Reporte de Actividad en Tiempo Real</h3>
+        <div sec:authorize="hasRole('ROLE_TUTOR')" th:if="${infantes != null}" class="tutor-status-box">
+            <h3 class="report-title">📊 Reporte de Actividad en Tiempo Real</h3>
             <div th:each="infante : ${infantes}" class="hijo-item-row">
-                <span style="font-size: 20px;">👶</span>
-                <div>
-                    <span style="font-size: 15px; font-weight: bold; color: #222;" th:text="${infante.nombre} + ' ' + ${infante.apellido}"></span>
-                    <span style="margin-left: 10px;">Estado:
-                        <span th:text="${infante.estadoActual}" th:class="'child-badge-status ' + (${infante.estadoActual} == 'Comiendo' ? 'status-comiendo' : (${infante.estadoActual} == 'Durmiendo' ? 'status-durmiendo' : (${infante.estadoActual} == 'Jugando' ? 'status-jugando' : (${infante.estadoActual} == 'Retirado' ? 'status-retirado' : (${infante.estadoActual} == 'Sin Ingresar' ? 'status-sin-ingresar' : 'status-sala')))))"></span>
+                <span class="emoji-icon">👶</span>
+                <div class="hijo-info">
+                    <span class="hijo-nombre" th:text="${infante.nombre} + ' ' + ${infante.apellido}"></span>
+                    <span class="hijo-status-wrapper">Estado:
+                        <span th:text="${infante.estadoActual}" 
+                              th:class="'child-badge-status ' + (${infante.estadoActual} == 'Comiendo' ? 'status-comiendo' : (${infante.estadoActual} == 'Durmiendo' ? 'status-durmiendo' : (${infante.estadoActual} == 'Jugando' ? 'status-jugando' : (${infante.estadoActual} == 'Retirado' ? 'status-retirado' : (${infante.estadoActual} == 'Sin Ingresar' ? 'status-sin-ingresar' : 'status-sala')))))">
+                        </span>
                     </span>
                 </div>
             </div>
@@ -57,13 +61,12 @@
                         <div class="video-container">
                             <video id="webcamPlayer" autoplay playsinline muted>
                                 <source src="http://IP_DE_TU_PC:8080/stream" type="application/x-mpegURL">
-                                Tu navegador no soporta streaming de video.
                             </video>
                         </div>
                     </div>
-                    <div th:if="${todosAfuera}" class="camara-bloqueda">
-                        <span style="font-size: 40px; margin-bottom: 10px;">🔒</span>
-                        <h4 style="margin: 0 0 5px 0; font-size: 16px;">Transmisión Deshabilitada</h4>
+                    <div th:if="${todosAfuera}" class="camara-bloqueada">
+                        <span class="lock-icon">🔒</span>
+                        <h4>Transmisión Deshabilitada</h4>
                     </div>
                 </th:block>
             </div>

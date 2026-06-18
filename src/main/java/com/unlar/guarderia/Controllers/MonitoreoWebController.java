@@ -5,12 +5,12 @@ import com.unlar.guarderia.Entitites.Tutor;
 import com.unlar.guarderia.Entitites.Usuario;
 import com.unlar.guarderia.Services.InfanteService;
 import com.unlar.guarderia.Repositories.UsuarioRepository;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,36 +18,35 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MonitoreoWebController {
 
-    private final InfanteService infanteService; 
-    private final UsuarioRepository usuarioRepository; 
+    private final InfanteService infanteService;
+    private final UsuarioRepository usuarioRepository;
 
     @GetMapping("/monitoreo")
-    public String mostrarMonitoreo(HttpSession session, Model model) {
-        String rol = (String) session.getAttribute("usuarioRol");
-        String email = (String) session.getAttribute("usuarioEmail"); 
-        
-        if (rol == null) {
+    public String mostrarMonitoreo(Principal principal, Model model) {
+        if (principal == null) {
             return "redirect:/login";
         }
 
-        // LÓGICA CORREGIDA: Buscamos y enviamos la lista completa de hijos del Tutor
-        if ("TUTOR".equals(rol)) {
-            Optional<Usuario> userOpt = usuarioRepository.findByEmail(email);
-            
-            if (userOpt.isPresent() && userOpt.get().getTutor() != null) {
-                Tutor legajoTutor = userOpt.get().getTutor();
-                
-                // Traemos todos los hermanos vinculados a este legajo
+        String email = principal.getName();
+
+        Optional<Usuario> userOpt = usuarioRepository.findByEmail(email);
+
+        if (userOpt.isPresent()) {
+            Usuario usuario = userOpt.get();
+            String rol = usuario.getRole();
+
+            if ("TUTOR".equals(rol) && usuario.getTutor() != null) {
+                Tutor legajoTutor = usuario.getTutor();
                 List<Infante> susHijos = infanteService.buscarPorTutorId(legajoTutor.getId());
-                
-                // Agregamos la lista entera al modelo para que la itere Thymeleaf
                 model.addAttribute("infantes", susHijos);
-                
-                System.out.println("Tutor autenticado: [" + email + "] accediendo al monitoreo general de sus " + susHijos.size() + " hijo/s.");
+
+                System.out.println("Tutor autenticado: [" + email + "] accediendo al monitoreo. Cantidad de hijos: "
+                        + susHijos.size());
             }
+
+            model.addAttribute("usuarioRol", rol);
         }
-        
-        model.addAttribute("usuarioRol", rol);
-        return "monitoreo"; 
+
+        return "monitoreo";
     }
 }

@@ -31,21 +31,21 @@ public class AsistenciaService {
 
         Optional<Asistencia> asistenciaActiva = asistenciaRepository
                 .findByInfanteIdAndFechaAndHoraSalidaIsNull(infanteId, hoy);
-        
+
         if (asistenciaActiva.isPresent()) {
             return "Error: El infante ya registra un ingreso activo para el día de hoy.";
         }
 
         Infante infante = infanteOpt.get();
-        
+
         infante.setEstadoActual("En Sala");
-        infanteRepository.save(infante); 
+        infanteRepository.save(infante);
 
         Asistencia asistencia = new Asistencia();
         asistencia.setFecha(hoy);
-        asistencia.setHoraEntrada(LocalTime.now()); 
+        asistencia.setHoraEntrada(LocalTime.now());
         asistencia.setInfante(infante);
-        asistencia.setBitacoraActividades("En Sala"); 
+        asistencia.setBitacoraActividades("En Sala");
 
         asistenciaRepository.save(asistencia);
         return "Ingreso registrado con éxito para el infante: " + infante.getNombre();
@@ -64,23 +64,20 @@ public class AsistenciaService {
         Optional<Infante> infanteOpt = infanteRepository.findById(infanteId);
         if (infanteOpt.isPresent()) {
             Infante infante = infanteOpt.get();
-            // ==========================================
-            // RESTABLECER ESTADO AL RETIRARSE 🚗 -> ⚪
-            // ==========================================
             infante.setEstadoActual("Sin Ingresar");
-            infanteRepository.saveAndFlush(infante); 
+            infanteRepository.saveAndFlush(infante);
         }
 
         Asistencia asistencia = asistenciaOpt.get();
         asistencia.setHoraSalida(LocalTime.now());
-        
+
         if (bitacora != null && !bitacora.trim().isEmpty()) {
             asistencia.setBitacoraActividades(bitacora);
         } else {
             asistencia.setBitacoraActividades("Retirado");
         }
 
-        asistenciaRepository.saveAndFlush(asistencia); 
+        asistenciaRepository.saveAndFlush(asistencia);
         return "Egreso registrado con éxito. ¡El infante ya fue retirado!";
     }
 

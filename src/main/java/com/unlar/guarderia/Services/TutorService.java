@@ -48,19 +48,16 @@ public class TutorService {
     @Transactional
     public void eliminarTutor(Long id) {
         Tutor tutor = tutorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Error: No se encontró el legajo de tutor con ID: " + id));
-        
-        // 1. Eliminar primero el usuario asociado si existe
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Error: No se encontró el legajo de tutor con ID: " + id));
         if (tutor.getUsuario() != null) {
             Usuario usuario = tutor.getUsuario();
-            // Desvinculamos el tutor antes de borrar para evitar inconsistencias
             usuario.setTutor(null);
             usuarioRepository.delete(usuario);
         }
-        
-        // 2. Ahora que el usuario no existe, borramos el tutor
         tutorRepository.delete(tutor);
-        
-        System.out.println("Legajo de Tutor ID [" + id + "] y su usuario/infantes asociados fueron eliminados del sistema.");
+
+        System.out.println(
+                "Legajo de Tutor ID [" + id + "] y su usuario/infantes asociados fueron eliminados del sistema.");
     }
 }

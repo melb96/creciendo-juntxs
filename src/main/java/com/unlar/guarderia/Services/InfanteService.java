@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class InfanteService {
 
     private final InfanteRepository infanteRepository;
-    private final TutorRepository tutorRepository; 
+    private final TutorRepository tutorRepository;
 
     public String registrarInfante(Infante infante, Long tutorId) {
         if (infanteRepository.findByDni(infante.getDni()).isPresent()) {
@@ -30,10 +30,6 @@ public class InfanteService {
         }
 
         infante.setTutor(tutorOpt.get());
-
-        // ==========================================
-        // VINCULACIÓN INICIAL CORRECTA ⚪
-        // ==========================================
         infante.setEstadoActual("Sin Ingresar");
 
         infanteRepository.save(infante);
@@ -58,6 +54,6 @@ public class InfanteService {
     }
 
     public List<Infante> buscarPorTutorId(Long tutorId) {
-        return infanteRepository.findByTutorId(tutorId); 
+        return infanteRepository.findByTutorId(tutorId);
     }
 }

@@ -26,17 +26,14 @@ public class AsistenciaController {
 
     @PostMapping("/ingreso")
     public String ingreso(@RequestBody AsistenciaRequest request) {
-        // Sacamos el ID del JSON y se lo pasamos como número al servicio
         return asistenciaService.registrarIngreso(request.getInfanteId());
     }
 
     @PostMapping("/egreso")
     public String egreso(@RequestBody AsistenciaRequest request) {
-        // Sacamos el ID y la bitácora del JSON y se los pasamos al servicio
         return asistenciaService.registrarEgreso(request.getInfanteId(), request.getBitacoraActividades());
     }
 
-    // Listar: GET http://localhost:8080/api/asistencias/fecha?f=2026-06-13
     @GetMapping("/fecha")
     public List<Asistencia> listarPorFecha(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate f) {
         return asistenciaService.listarPorFecha(f);

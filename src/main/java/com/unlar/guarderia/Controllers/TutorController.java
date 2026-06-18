@@ -22,19 +22,16 @@ public class TutorController {
 
     private final TutorService tutorService;
 
-    // Endpoint para registrar: POST http://localhost:8080/api/tutores/registrar
     @PostMapping("/registrar")
     public String registrar(@RequestBody Tutor tutor) {
         return tutorService.registrarTutor(tutor);
     }
 
-    // Endpoint para listar todos: GET http://localhost:8080/api/tutores
     @GetMapping
     public List<Tutor> listarTodos() {
         return tutorService.obtenerTodos();
     }
 
-    // Endpoint para buscar por DNI: GET http://localhost:8080/api/tutores/buscar/{dni}
     @GetMapping("/buscar/{dni}")
     public Optional<Tutor> buscarPorDni(@PathVariable String dni) {
         return tutorService.buscarPorDni(dni);

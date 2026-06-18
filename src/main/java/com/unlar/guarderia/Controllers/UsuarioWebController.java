@@ -3,121 +3,126 @@ package com.unlar.guarderia.Controllers;
 import com.unlar.guarderia.Entitites.Usuario;
 import com.unlar.guarderia.Services.UsuarioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/usuarios") // URL para las pantallas web
+@RequestMapping("/usuarios")
 @RequiredArgsConstructor
 public class UsuarioWebController {
 
     private final UsuarioService usuarioService;
 
-    // 1. Muestra la tabla de usuarios registrados: http://localhost:8080/usuarios
+    // Método auxiliar para verificar si el usuario es ADMIN
+    private boolean esAdmin(Authentication auth) {
+        return auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
     @GetMapping
-    public String listarUsuarios(Model model) {
+    public String listarUsuarios(Authentication auth, Model model) {
+        if (!esAdmin(auth))
+            return "redirect:/home";
         model.addAttribute("lista", usuarioService.obtenerTodos());
-        return "usuarios-lista"; // Llama a templates/usuarios-lista.html
+        return "usuarios-lista";
     }
 
-    // 2. Muestra el formulario para crear un nuevo usuario: http://localhost:8080/usuarios/nuevo
     @GetMapping("/nuevo")
-    public String mostrarFormulario(Model model) {
+    public String mostrarFormulario(Authentication auth, Model model) {
+        if (!esAdmin(auth))
+            return "redirect:/home";
         model.addAttribute("usuario", new Usuario());
-        return "usuarios-formulario"; // Llama a templates/usuarios-formulario.html
+        return "usuarios-formulario";
     }
 
-    // 3. Procesa la carga del formulario web
     @PostMapping("/guardar")
-    public String guardarUsuario(@ModelAttribute("usuario") Usuario usuario, Model model) {
+    public String guardarUsuario(Authentication auth, @ModelAttribute("usuario") Usuario usuario, Model model) {
+        if (!esAdmin(auth))
+            return "redirect:/home";
         String resultado = usuarioService.registrarUsuario(usuario);
-        
         if (resultado.startsWith("Error")) {
             model.addAttribute("error", resultado);
-            return "usuarios-formulario"; // Si hay error (ej: email duplicado), vuelve al formulario
+            return "usuarios-formulario";
         }
-        
-        return "redirect:/usuarios"; // Si todo sale bien, vuelve a la lista
+        return "redirect:/usuarios";
     }
 
-    // 1. Muestra el formulario con los datos del usuario cargados
     @GetMapping("/editar/{id}")
-    public String mostrarFormularioEditar(@PathVariable("id") Long id, Model model) {
-    Usuario usuario = usuarioService.obtenerPorId(id)
-            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + id));
-            
-    model.addAttribute("usuario", usuario);
-    return "usuarios-formulario"; // Reutilizamos el mismo HTML de alta
-}
-
-    // 2. Procesa la actualización del usuario editado
-    @PostMapping("/actualizar")
-    public String actualizarUsuario(@ModelAttribute("usuario") Usuario usuario) {
-    usuarioService.actualizarUsuario(usuario);
-    return "redirect:/usuarios"; // Al terminar, redirige a la tabla
-}
-
-    // Endpoint para eliminar: http://localhost:8080/usuarios/eliminar/1
-    @GetMapping("/eliminar/{id}")
-    public String eliminarUsuario(@PathVariable("id") Long id) {
-    usuarioService.eliminarUsuario(id);
-    return "redirect:/usuarios"; // Vuelve a la lista de usuarios
-}
-
-// A. Muestra el formulario de usuario interceptando el ID del tutor desde la URL
-    @GetMapping("/nuevo-tutor")
-    public String mostrarFormularioTutor(@RequestParam("tutorId") Long tutorId, Model model) {
-        Usuario usuario = new Usuario();
-        usuario.setRole("TUTOR"); // Forzamos por defecto que sea rol TUTOR
-        
+    public String mostrarFormularioEditar(Authentication auth, @PathVariable("id") Long id, Model model) {
+        if (!esAdmin(auth))
+            return "redirect:/home";
+        Usuario usuario = usuarioService.obtenerPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + id));
         model.addAttribute("usuario", usuario);
-        model.addAttribute("tutorIdId", tutorId); // Pasamos el ID para inyectarlo de forma oculta
-        return "usuarios-formulario"; 
+        return "usuarios-formulario";
+    }
+
+    @PostMapping("/actualizar")
+    public String actualizarUsuario(Authentication auth, @ModelAttribute("usuario") Usuario usuario) {
+        if (!esAdmin(auth))
+            return "redirect:/home";
+        usuarioService.actualizarUsuario(usuario);
+        return "redirect:/usuarios";
+    }
+
+    @GetMapping("/eliminar/{id}")
+    public String eliminarUsuario(Authentication auth, @PathVariable("id") Long id) {
+        if (!esAdmin(auth))
+            return "redirect:/home";
+        usuarioService.eliminarUsuario(id);
+        return "redirect:/usuarios";
+    }
+
+    // A. Muestra el formulario de usuario interceptando el ID del tutor
+    @GetMapping("/nuevo-tutor")
+    public String mostrarFormularioTutor(Authentication auth, @RequestParam("tutorId") Long tutorId, Model model) {
+        if (!esAdmin(auth))
+            return "redirect:/home";
+        Usuario usuario = new Usuario();
+        usuario.setRole("TUTOR");
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("tutorIdId", tutorId);
+        return "usuarios-formulario";
     }
 
     // B. Procesa el guardado mapeando el ID del legajo físico
     @PostMapping("/guardar-tutor")
-    public String guardarUsuarioTutor(@ModelAttribute("usuario") Usuario usuario, 
-                                      @RequestParam("tutorId") Long tutorId, 
-                                      Model model) {
-        
-        // Llamamos al nuevo método de tu servicio que explicamos en el paso anterior
+    public String guardarUsuarioTutor(Authentication auth, @ModelAttribute("usuario") Usuario usuario,
+            @RequestParam("tutorId") Long tutorId, Model model) {
+        if (!esAdmin(auth))
+            return "redirect:/home";
         String resultado = usuarioService.registrarUsuarioTutor(usuario, tutorId);
-        
         if (resultado.startsWith("Error")) {
             model.addAttribute("error", resultado);
-            model.addAttribute("tutorIdId", tutorId); // Mantenemos el ID si hay que rellenar por error
+            model.addAttribute("tutorIdId", tutorId);
             return "usuarios-formulario";
         }
-        
-        // Al terminar, mandamos al Operador de vuelta a la lista de legajos de tutores
-        return "redirect:/tutores"; 
+        return "redirect:/tutores";
     }
 
-    // A. Muestra la pantalla de recuperación: http://localhost:8080/usuarios/recuperar
+    // A. Muestra la pantalla de recuperación (Pública)
     @GetMapping("/recuperar")
     public String mostrarPantallaRecuperar() {
-        return "usuarios-recuperar"; // Llama a templates/usuarios-recuperar.html
+        return "usuarios-recuperar";
     }
 
-    // B. Procesa el formulario de restablecimiento
+    // B. Procesa el formulario de restablecimiento (Pública - Sin Authentication)
     @PostMapping("/recuperar")
     public String procesarRestablecimiento(@RequestParam("email") String email,
-                                           @RequestParam("dni") String dni,
-                                           @RequestParam("nuevaPassword") String nuevaPassword,
-                                           Model model) {
-        
+            @RequestParam("dni") String dni,
+            @RequestParam("nuevaPassword") String nuevaPassword,
+            Model model) {
+
         String resultado = usuarioService.restablecerContraseniaPorDni(email, dni, nuevaPassword);
-        
+
         if (resultado.startsWith("Error")) {
             model.addAttribute("error", resultado);
-            return "usuarios-recuperar"; // Si falla (no coincide DNI/Email), vuelve con el error
+            return "usuarios-recuperar";
         }
-        
-        // Si sale todo bien, lo mandamos al login con un cartel de éxito
-        model.addAttribute("exito", resultado);
-        return "login"; // O a la ruta que uses para el login (ej: "redirect:/login")
-    }
 
+        model.addAttribute("exito", "Contraseña restablecida correctamente.");
+        return "redirect:/login";
+    }
 }
