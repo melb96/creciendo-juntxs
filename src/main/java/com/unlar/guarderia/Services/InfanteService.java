@@ -56,4 +56,10 @@ public class InfanteService {
     public List<Infante> buscarPorTutorId(Long tutorId) {
         return infanteRepository.findByTutorId(tutorId);
     }
+
+    public void eliminarInfante(Long id) {
+        if (infanteRepository.existsById(id)) {
+            infanteRepository.deleteById(id);
+        }
+    }
 }

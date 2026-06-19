@@ -2,29 +2,40 @@ body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; pad
 
 /* Navbar */
 .navbar { background-color: #ffffff; border-bottom: 3px solid #145D96; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); width: 100%; box-sizing: border-box; }
+.navbar a { text-decoration: none; }
 .navbar-brand-box { display: flex; align-items: center; gap: 15px; }
+.navbar-divider { width: 2px; height: 32px; background-color: #e0e0e0; }
 .logo-img { height: 45px; width: auto; object-fit: contain; }
 .project-text-logo { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 24px; font-weight: 800; color: #145D96; letter-spacing: -0.5px; text-transform: uppercase; margin: 0; }
 .navbar-subtitle { font-size: 11px; color: #666; margin: 2px 0 0 0; font-weight: bold; letter-spacing: 0.5px; }
 
 /* Formulario */
 .page-content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 30px 20px; box-sizing: border-box; }
-.form-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 100%; max-width: 400px; box-sizing: border-box; }
+.form-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 100%; max-width: 500px; box-sizing: border-box; }
 h2 { text-align: center; color: #333; margin-top: 0; margin-bottom: 20px; font-size: 20px; }
 .form-group { margin-bottom: 15px; }
 label { display: block; margin-bottom: 5px; color: #555; font-weight: bold; font-size: 14px; }
-input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 14px; color: #333; }
+input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 14px; color: #333; }
 input:focus, select:focus { border-color: #145D96; outline: none; }
+textarea { resize: vertical; height: 80px; }
 
-.btn-submit { width: 100%; padding: 11px; background-color: #145D96; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 15px; font-weight: bold; margin-top: 15px; transition: background-color 0.2s; }
+/* Botones */
+.btn-submit, .btn-cancel { width: 100%; padding: 11px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; margin-top: 10px; box-sizing: border-box; text-align: center; text-decoration: none; display: block; transition: background-color 0.2s; }
+.btn-submit { background-color: #145D96; color: white; }
 .btn-submit:hover { background-color: #0d436d; }
-.btn-cancel { display: block; text-align: center; width: 100%; padding: 10px; background-color: #6c757d; color: white; border-radius: 4px; text-decoration: none; margin-top: 10px; box-sizing: border-box; font-size: 14px; font-weight: bold; }
+.btn-cancel { background-color: #6c757d; color: white; }
 .btn-cancel:hover { background-color: #5a6268; }
 .error-msg { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 4px; text-align: center; margin-bottom: 15px; font-size: 14px; }
 
 @media (max-width: 768px) {
     .page-content { padding: 15px 10px; }
-    .form-container { padding: 20px; border-radius: 6px; }
-    h2 { font-size: 18px; }
-    input, select, .btn-submit, .btn-cancel { padding: 12px; font-size: 15px; }
+    input, select, textarea, .btn-submit, .btn-cancel { padding: 12px; font-size: 15px; }
+}
+
+/* Específico para el formulario de recuperación */
+.sub { 
+    text-align: center; 
+    color: #666; 
+    font-size: 13px; 
+    margin-bottom: 20px; 
 }

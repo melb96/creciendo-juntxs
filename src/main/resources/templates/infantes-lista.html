@@ -5,7 +5,7 @@
     <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creciendo Juntxs - Lista de Infantes</title>
-    <link rel="stylesheet" th:href="@{/css/infantes-lista.css}">
+    <link rel="stylesheet" th:href="@{/css/listas.css}">
 </head>
 <body>
 
@@ -14,7 +14,7 @@
             <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
                 <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
             </a>
-            <div style="width: 2px; height: 32px; background-color: #e0e0e0;"></div>
+            <div class="navbar-divider"></div>
             <a th:href="@{/home}" style="text-decoration: none;">
                 <div>
                     <h1 class="project-text-logo">Creciendo Juntxs</h1>
@@ -39,7 +39,7 @@
                         <th>DNI</th>
                         <th>Fecha de Nacimiento</th>
                         <th>Responsable Parental (Tutor)</th>
-                        <th>Observaciones Médicas</th>
+                        <th>Observaciones</th>
                         <th>Estado Diario</th>
                         <th>Acciones</th>
                     </tr>
@@ -47,13 +47,13 @@
                 <tbody>
                     <tr th:each="i : ${lista}">
                         <td th:text="${i.id}"></td>
-                        <td th:text="${i.apellido} + ', ' + ${i.nombre}" style="font-weight: bold;"></td>
+                        <td class="text-bold" th:text="${i.apellido} + ', ' + ${i.nombre}"></td>
                         <td th:text="${i.dni}"></td>
                         <td th:text="${i.fechaNacimiento}"></td>
                         <td th:text="${i.tutor.apellido} + ', ' + ${i.tutor.nombre} + ' (' + ${i.tutor.relacionUniversitaria} + ')'"></td>
-                        <td th:text="${i.observacionesMedicas}"></td>
+                        <td class="bitacora-text" th:text="${i.observaciones}"></td>
                         <td>
-                            <form action="/infantes/cambiar-estado" method="POST" style="margin:0; padding:0;">
+                            <form action="/infantes/cambiar-estado" method="POST" class="form-estado">
                                 <input type="hidden" name="infanteId" th:value="${i.id}" />
                                 <select name="nuevoEstado" class="select-estado" onchange="this.form.submit()"
                                     th:disabled="${i.estadoActual == 'Sin Ingresar' || i.estadoActual == 'Retirado'}">
@@ -70,11 +70,16 @@
                             <div class="actions-container">
                                 <a th:href="@{/infantes/historial/{id}(id=${i.id})}" class="btn-action-grilla btn-historial">📋 Historial</a>
                                 <a th:href="@{/infantes/editar/{id}(id=${i.id})}" class="btn-action-grilla btn-editar">✏️ Editar</a>
+                                <a th:href="@{/infantes/eliminar/{id}(id=${i.id})}" 
+                                   class="btn-action-grilla btn-eliminar" 
+                                   onclick="return confirm('¿Estás seguro de que deseas eliminar este infante? Esta acción no se puede deshacer.');">
+                                   🗑️ Eliminar
+                                </a>
                             </div>
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(lista)}">
-                        <td colspan="8" style="text-align: center; color: #999; padding: 20px;">No hay infantes registrados en el sistema.</td>
+                        <td colspan="8" class="empty-msg">No hay infantes registrados en el sistema.</td>
                     </tr>
                 </tbody>
             </table>

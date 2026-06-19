@@ -1,34 +1,6 @@
-/* Estilos generales */
-body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0; }
-
-/* NAVBAR INSTITUCIONAL UNIFICADO */
-.navbar { 
-    background-color: #ffffff; 
-    border-bottom: 3px solid #145D96; 
-    padding: 10px 20px; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-    width: 100%; 
-    box-sizing: border-box; 
-}
-.navbar-brand-box { display: flex; align-items: center; gap: 15px; }
-.logo-img { height: 45px; width: auto; object-fit: contain; }
-.project-text-logo { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 24px; font-weight: 800; color: #145D96; letter-spacing: -0.5px; text-transform: uppercase; margin: 0; }
-.navbar-subtitle { font-size: 11px; color: #666; font-weight: bold; margin: 2px 0 0 0; letter-spacing: 0.5px; }
-
-/* Contenedor y Elementos */
-.container { max-width: 1150px; margin: 20px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); box-sizing: border-box; }
+/* Sobreescritura y estilos específicos */
+.nombre-nino { font-weight: bold; }
 .fecha-badge { background-color: #145D96; color: white; padding: 5px 10px; border-radius: 4px; font-size: 14px; margin-bottom: 20px; font-weight: bold; display: inline-block; }
-.btn-back { display: inline-block; padding: 8px 15px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; margin-left: 10px; font-weight: bold; vertical-align: top; }
-.btn-back:hover { background-color: #5a6268; }
-
-/* Tabla */
-.table-responsive { width: 100%; overflow-x: auto; margin-top: 10px; border-radius: 6px; border: 1px solid #ddd; }
-table { width: 100%; border-collapse: collapse; min-width: 900px; }
-th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; vertical-align: middle; }
-th { background-color: #f8f9fa; color: #333; }
 
 /* Estados */
 .status { padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; color: white; display: inline-block; }
@@ -39,15 +11,21 @@ th { background-color: #f8f9fa; color: #333; }
 .status-jugando { background-color: #28a745; }
 .status-retirado { background-color: #6c757d; }
 
-/* Botones y Inputs */
-.btn-action { padding: 8px 12px; border: none; border-radius: 4px; color: white; cursor: pointer; font-weight: bold; font-size: 13px; display: inline-block; white-space: nowrap; }
+/* Formularios dentro de celdas */
+.form-asistencia { margin: 0; display: flex; gap: 5px; align-items: center; }
+.actions-group { display: flex; gap: 8px; align-items: center; }
+.bitacora-group { display: flex; flex-direction: column; gap: 5px; }
+
+.btn-action { padding: 8px 12px; border: none; border-radius: 4px; color: white; cursor: pointer; font-weight: bold; font-size: 13px; }
+.btn-small { padding: 4px 8px; font-size: 11px; }
 .btn-ingreso { background-color: #28a745; }
 .btn-egreso { background-color: #dc3545; }
 .btn-alerta { background-color: #e67e22; }
-.input-bitacora { width: 220px; padding: 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; box-sizing: border-box; }
+
+.input-bitacora { width: 220px; padding: 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; }
 .bitacora-display { font-size: 13px; color: #555; font-style: italic; max-width: 250px; word-wrap: break-word; }
 
 @media (max-width: 768px) {
-    .container { margin: 10px; width: calc(100% - 20px); }
-    .btn-back { margin-left: 0; display: block; text-align: center; }
+    .btn-action { width: 100%; display: block; margin-top: 5px; }
+    .input-bitacora { width: 100%; }
 }

@@ -30,7 +30,6 @@
 <div class="container" sec:authorize="isAuthenticated()">
     <div class="user-info-bar">
         <div>👤 Sesión activa: <strong th:text="${usuarioEmail}"></strong></div>
-        
         <div>Rol:
             <span th:text="${rolLimpio}" 
                   th:class="'badge-role ' + (${rolLimpio} == 'ADMIN' ? 'badge-admin' : (${rolLimpio} == 'OPERADOR' ? 'badge-operador' : 'badge-tutor'))">
@@ -52,22 +51,31 @@
             <p>Inscripción interna de niños/as y vinculación relacional con sus tutores.</p>
         </a>
 
+        <a href="/maestras" class="card" th:if="${rolLimpio == 'ADMIN' or rolLimpio == 'OPERADOR'}">
+            <h3>👩‍🏫 Gestión de Maestras</h3>
+            <p>Registro y administración del cuerpo docente de la guardería.</p>
+        </a>
+
+        <a href="/salas" class="card" th:if="${rolLimpio == 'ADMIN' or rolLimpio == 'OPERADOR'}">
+            <h3>🏫 Gestión de Salas</h3>
+            <p>Administración de grupos, salas y asignación de docentes.</p>
+        </a>
+
         <a href="/asistencias" class="card" th:if="${rolLimpio == 'ADMIN' or rolLimpio == 'OPERADOR'}">
             <h3>📝 Asistencia Diaria</h3>
-            <p>Control de presentismo, ingresos, egresos y actualización de bitácoras de sala.</p>
+            <p>Control de presentismo, ingresos, egresos y bitácoras.</p>
         </a>
 
         <a href="/monitoreo" class="card">
             <h3>📹 Espacios Comunes</h3>
-            <p>Visualización segura en tiempo real del área de juegos y salas para el núcleo familiar.</p>
+            <p>Visualización segura en tiempo real del área de juegos y salas.</p>
         </a>
 
         <a href="/usuarios" class="card card-admin" th:if="${rolLimpio == 'ADMIN'}">
             <h3>🔐 Usuarios y Roles</h3>
-            <p>Administración de credenciales de acceso, roles y permisos jerárquicos del sistema.</p>
+            <p>Administración de credenciales de acceso, roles y permisos.</p>
         </a>
     </div>
 </div>
-
 </body>
 </html>

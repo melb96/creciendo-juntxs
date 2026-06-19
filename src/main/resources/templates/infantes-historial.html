@@ -5,7 +5,7 @@
     <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creciendo Juntxs - Historial de Asistencia</title>
-    <link rel="stylesheet" th:href="@{/css/infantes-historial.css}">
+    <link rel="stylesheet" th:href="@{/css/listas.css}">
 </head>
 <body>
 
@@ -14,7 +14,7 @@
             <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
                 <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
             </a>
-            <div style="width: 2px; height: 32px; background-color: #e0e0e0;"></div>
+            <div class="navbar-divider"></div>
             <a th:href="@{/home}" style="text-decoration: none;">
                 <div>
                     <h1 class="project-text-logo">Creciendo Juntxs</h1>
@@ -27,11 +27,11 @@
     <div class="container">
         <h2>Historial Cronológico de Asistencias</h2>
         <div class="sub">
-            👶 Infante: <strong th:text="${infante.apellido} + ', ' + ${infante.nombre}" style="color: #145D96;"></strong> |
-            🪪 DNI: <span th:text="${infante.dni}" style="font-weight: bold; color: #333;"></span>
+            👶 Infante: <strong class="text-primary" th:text="${infante.apellido} + ', ' + ${infante.nombre}"></strong> |
+            🪪 DNI: <span class="text-bold" th:text="${infante.dni}"></span>
         </div>
 
-        <a href="/infantes" class="btn-back">⬅ Volver a Legajos</a>
+        <a href="/infantes" class="btn btn-secondary">⬅ Volver a Legajos</a>
 
         <div class="table-responsive">
             <table>
@@ -45,15 +45,15 @@
                 </thead>
                 <tbody>
                     <tr th:each="ast : ${historial}">
-                        <td th:text="${ast.fecha}" style="font-weight: bold;"></td>
-                        <td th:text="${ast.horaEntrada}" style="color: #28a745; font-weight: bold;"></td>
+                        <td class="text-bold" th:text="${ast.fecha}"></td>
+                        <td class="text-success text-bold" th:text="${ast.horaEntrada}"></td>
                         <td th:text="${ast.horaSalida != null ? ast.horaSalida : 'En sala / Activo'}"
-                            th:style="${ast.horaSalida == null ? 'color: #ffc107; font-weight: bold;' : 'color: #dc3545;'}">
+                            th:classappend="${ast.horaSalida == null ? 'text-warning text-bold' : 'text-danger'}">
                         </td>
                         <td class="bitacora-text" th:text="${ast.bitacoraActividades}"></td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(historial)}">
-                        <td colspan="4" style="text-align: center; color: #999; padding: 20px;">Este infante no registra asistencias cargadas en el sistema.</td>
+                        <td colspan="4" class="empty-msg">Este infante no registra asistencias cargadas en el sistema.</td>
                     </tr>
                 </tbody>
             </table>

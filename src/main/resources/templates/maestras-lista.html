@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creciendo Juntxs - Lista de Tutores</title>
+    <title>Creciendo Juntxs - Gestión de Maestras</title>
     <link rel="stylesheet" th:href="@{/css/listas.css}">
 </head>
 <body>
@@ -25,44 +25,39 @@
     </nav>
 
     <div class="container">
-        <h2>Legajo de Tutores</h2>
+        <h2>Gestión de Maestras</h2>
 
-        <a href="/tutores/nuevo" class="btn">➕ Registrar Nuevo Tutor</a>
+        <a href="/maestras/nuevo" class="btn">➕ Nueva Maestra</a>
         <a href="/home" class="btn btn-secondary">🏠 Volver al Inicio</a>
 
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Legajo</th>
                         <th>Nombre Completo</th>
                         <th>DNI</th>
-                        <th>Teléfono</th>
-                        <th>Relación Universitaria</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="t : ${lista}">
-                        <td th:text="${t.id}"></td>
-                        <td th:text="${t.apellido} + ', ' + ${t.nombre}" style="font-weight: bold;"></td>
-                        <td th:text="${t.dni}"></td>
-                        <td th:text="${t.telefono}"></td>
-                        <td th:text="${t.relacionUniversitaria}"></td>
+                    <tr th:each="m : ${lista}">
+                        <td class="text-bold" th:text="${m.legajo}"></td>
+                        <td th:text="${m.apellido} + ', ' + ${m.nombre}"></td>
+                        <td th:text="${m.dni}"></td>
                         <td>
-                            <a th:if="${t.usuario == null}" th:href="@{/usuarios/nuevo-tutor(tutorId=${t.id})}"
-                                class="btn-action-grilla btn-crear">🔑 Crear Cuenta</a>
-
-                            <span th:if="${t.usuario != null}" class="badge-activo">✔️ Cuenta Activa</span>
-
-                            <a th:href="@{/tutores/editar/{id}(id=${t.id})}" class="btn-action-grilla btn-editar">✏️ Editar</a>
-
-                            <a th:href="@{/tutores/eliminar/{id}(id=${t.id})}" class="btn-action-grilla btn-eliminar"
-                                onclick="return confirm('¿Estás seguro de que deseas eliminar este tutor de forma permanente?');">🗑️ Eliminar</a>
+                            <div class="actions-container">
+                                <a th:href="@{/maestras/editar/{id}(id=${m.id})}" 
+                                   class="btn-action-grilla btn-editar">✏️ Editar</a>
+                                
+                                <a th:href="@{/maestras/eliminar/{id}(id=${m.id})}" 
+                                   class="btn-action-grilla btn-eliminar"
+                                   onclick="return confirm('¿Estás seguro de que deseas eliminar esta maestra?');">🗑️ Eliminar</a>
+                            </div>
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(lista)}">
-                        <td colspan="8" class="empty-msg">No hay tutores registrados en el sistema.</td>
+                        <td colspan="4" class="empty-msg">No hay maestras registradas en el sistema.</td>
                     </tr>
                 </tbody>
             </table>

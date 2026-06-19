@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creciendo Juntxs - Control de Asistencia</title>
+    <link rel="stylesheet" th:href="@{/css/listas.css}">
     <link rel="stylesheet" th:href="@{/css/asistencias.css}">
 </head>
+
 <body>
 
     <nav class="navbar">
@@ -14,7 +17,7 @@
             <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
                 <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
             </a>
-            <div style="width: 2px; height: 32px; background-color: #e0e0e0;"></div>
+            <div class="navbar-divider"></div>
             <a th:href="@{/home}" style="text-decoration: none;">
                 <div>
                     <h1 class="project-text-logo">Creciendo Juntxs</h1>
@@ -26,8 +29,8 @@
 
     <div class="container">
         <h2>Control de Asistencia Diaria</h2>
-        <div class="fecha-badge">📅 Fecha del sistema: <span th:text="${fechaHoy}"></span></div>
-        <a href="/home" class="btn-back">🏠 Volver al Inicio</a>
+        <div class="btn btn-badge">📅 Fecha del sistema: <span th:text="${fechaHoy}"></span></div>
+        <a href="/home" class="btn btn-secondary">🏠 Volver al Inicio</a>
 
         <div class="table-responsive">
             <table>
@@ -43,18 +46,20 @@
                 </thead>
                 <tbody>
                     <tr th:each="infante : ${infantes}">
-                        <td th:text="${infante.apellido} + ', ' + ${infante.nombre}" style="font-weight: bold;"></td>
+                        <td class="nombre-nino" th:text="${infante.apellido} + ', ' + ${infante.nombre}"></td>
                         <td th:text="${infante.tutor.apellido} + ', ' + ${infante.tutor.nombre}"></td>
 
                         <td>
-                            <span th:text="${infante.estadoActual}" th:class="'status ' + (${infante.estadoActual} == 'Comiendo' ? 'status-comiendo' : (${infante.estadoActual} == 'Durmiendo' ? 'status-durmiendo' : (${infante.estadoActual} == 'Jugando' ? 'status-jugando' : (${infante.estadoActual} == 'Retirado' ? 'status-retirado' : (${infante.estadoActual} == 'En Sala' ? 'status-sala' : 'status-sin-ingresar')))))"></span>
+                            <span th:text="${infante.estadoActual}"
+                                th:class="'status ' + (${infante.estadoActual} == 'Comiendo' ? 'status-comiendo' : (${infante.estadoActual} == 'Durmiendo' ? 'status-durmiendo' : (${infante.estadoActual} == 'Jugando' ? 'status-jugando' : (${infante.estadoActual} == 'Retirado' ? 'status-retirado' : (${infante.estadoActual} == 'En Sala' ? 'status-sala' : 'status-sin-ingresar')))))"></span>
                         </td>
 
-                        <th:block th:with="asistenciasDelNiño=${asistenciasHoy.?[infante.id == __${infante.id}__]}, tieneAsistencia=!${asistenciasDelNiño.isEmpty()}, ultimaAsistencia=${tieneAsistencia ? asistenciasDelNiño[asistenciasDelNiño.size() - 1] : null}, estaAdentro=${tieneAsistencia && ultimaAsistencia.horaSalida == null}, yaSalio=${tieneAsistencia && ultimaAsistencia.horaSalida != null}">
+                        <th:block
+                            th:with="asistenciasDelNiño=${asistenciasHoy.?[infante.id == __${infante.id}__]}, tieneAsistencia=!${asistenciasDelNiño.isEmpty()}, ultimaAsistencia=${tieneAsistencia ? asistenciasDelNiño[asistenciasDelNiño.size() - 1] : null}, estaAdentro=${tieneAsistencia && ultimaAsistencia.horaSalida == null}, yaSalio=${tieneAsistencia && ultimaAsistencia.horaSalida != null}">
 
                             <td th:if="${!tieneAsistencia}" colspan="2">-</td>
                             <td th:if="${!tieneAsistencia}">
-                                <form th:action="@{/asistencias/ingreso}" method="POST" style="margin:0;">
+                                <form th:action="@{/asistencias/ingreso}" method="POST" class="form-asistencia">
                                     <input type="hidden" name="infanteId" th:value="${infante.id}">
                                     <button type="submit" class="btn-action btn-ingreso">▶ Registrar Ingreso</button>
                                 </form>
@@ -63,15 +68,16 @@
                             <td th:if="${estaAdentro}" th:text="${ultimaAsistencia.horaEntrada}"></td>
                             <td th:if="${estaAdentro}">-</td>
                             <td th:if="${estaAdentro}">
-                                <div style="display: flex; gap: 8px; align-items: center;">
-                                    <form th:action="@{/asistencias/egreso}" method="POST" style="margin:0; display: flex; gap: 5px; align-items: center;">
+                                <div class="actions-group">
+                                    <form th:action="@{/asistencias/egreso}" method="POST" class="form-asistencia">
                                         <input type="hidden" name="infanteId" th:value="${infante.id}">
-                                        <input type="text" name="bitacora" class="input-bitacora" placeholder="Notas de la bitácora...">
+                                        <input type="text" name="bitacora" class="input-bitacora"
+                                            placeholder="Notas...">
                                         <button type="submit" class="btn-action btn-egreso">■ Registrar Salida</button>
                                     </form>
-                                    <button type="button" class="btn-action btn-alerta" 
+                                    <button type="button" class="btn-action btn-alerta"
                                         th:onclick="dispararAlertaWhatsApp([[${infante.tutor.telefono}]], [[${infante.nombre}]], [[${infante.apellido}]])">
-                                        🚨 Alerta Tutor
+                                        🚨 Alerta
                                     </button>
                                 </div>
                             </td>
@@ -79,21 +85,28 @@
                             <td th:if="${yaSalio}" th:text="${ultimaAsistencia.horaEntrada}"></td>
                             <td th:if="${yaSalio}" th:text="${ultimaAsistencia.horaSalida}"></td>
                             <td th:if="${yaSalio}">
-                                <div style="display: flex; flex-direction: column; gap: 5px;">
-                                    <span th:text="${ultimaAsistencia.bitacoraActividades}" class="bitacora-display"></span>
-                                    <form th:action="@{/asistencias/ingreso}" method="POST" style="margin:5px 0 0 0;">
+                                <div class="bitacora-group">
+                                    <span th:text="${ultimaAsistencia.bitacoraActividades}"
+                                        class="bitacora-display"></span>
+                                    <form th:action="@{/asistencias/ingreso}" method="POST" class="form-asistencia">
                                         <input type="hidden" name="infanteId" th:value="${infante.id}">
-                                        <button type="submit" class="btn-action btn-ingreso" style="padding: 4px 8px; font-size: 11px;">▶ Re-ingresar</button>
+                                        <button type="submit" class="btn-action btn-ingreso btn-small">▶
+                                            Re-ingresar</button>
                                     </form>
                                 </div>
                             </td>
                         </th:block>
                     </tr>
+
+                    <tr th:if="${#lists.isEmpty(infantes)}">
+                        <td colspan="6" class="empty-msg">No hay infantes registrados en el sistema para esta
+                            asistencia.</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
-
     <script th:src="@{/js/asistencias.js}"></script>
 </body>
+
 </html>

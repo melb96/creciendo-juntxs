@@ -10,4 +10,6 @@ import com.unlar.guarderia.Entitites.Infante;
 public interface InfanteRepository extends JpaRepository<Infante, Long> {
 Optional<Infante> findByDni(String dni);
 List<Infante> findByTutorId(Long tutorId);
+List<Infante> findByMaestraId(Long maestraId);
+List<Infante> findBySalaId(Long salaId);
 }

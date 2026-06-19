@@ -15,7 +15,6 @@ public class UsuarioWebController {
 
     private final UsuarioService usuarioService;
 
-    // Método auxiliar para verificar si el usuario es ADMIN
     private boolean esAdmin(Authentication auth) {
         return auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
@@ -75,7 +74,6 @@ public class UsuarioWebController {
         return "redirect:/usuarios";
     }
 
-    // A. Muestra el formulario de usuario interceptando el ID del tutor
     @GetMapping("/nuevo-tutor")
     public String mostrarFormularioTutor(Authentication auth, @RequestParam("tutorId") Long tutorId, Model model) {
         if (!esAdmin(auth))
@@ -87,7 +85,6 @@ public class UsuarioWebController {
         return "usuarios-formulario";
     }
 
-    // B. Procesa el guardado mapeando el ID del legajo físico
     @PostMapping("/guardar-tutor")
     public String guardarUsuarioTutor(Authentication auth, @ModelAttribute("usuario") Usuario usuario,
             @RequestParam("tutorId") Long tutorId, Model model) {
@@ -102,13 +99,11 @@ public class UsuarioWebController {
         return "redirect:/tutores";
     }
 
-    // A. Muestra la pantalla de recuperación (Pública)
     @GetMapping("/recuperar")
     public String mostrarPantallaRecuperar() {
         return "usuarios-recuperar";
     }
 
-    // B. Procesa el formulario de restablecimiento (Pública - Sin Authentication)
     @PostMapping("/recuperar")
     public String procesarRestablecimiento(@RequestParam("email") String email,
             @RequestParam("dni") String dni,

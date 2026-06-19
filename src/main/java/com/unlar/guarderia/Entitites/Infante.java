@@ -3,6 +3,8 @@ package com.unlar.guarderia.Entitites;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,14 +37,34 @@ public class Infante {
     @Column(nullable = false, unique = true, length = 15)
     private String dni;
     @Column(nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
-    @Column(length = 255)
-    private String observacionesMedicas;
     @Column(nullable = false, length = 50)
     private String estadoActual = "En Sala";
+    @Column(length = 200)
+    private String alergias;
+    @Column(length = 100)
+    private String obraSocial;
+    @Column(length = 250)
+    private String medicacion;
+    @Column(length = 255)
+    private String contactosEmergencia;
+    @Column(length = 255)
+    private String autorizadosRetiro;
+    @Column(columnDefinition = "TEXT")
+    private String observaciones;
+    @Column(name = "tiene_consentimiento_camara", nullable = false)
+    private boolean consienteCamara;
+
     @ManyToOne
     @JoinColumn(name = "tutor_id", nullable = false)
     private Tutor tutor;
     @OneToMany(mappedBy = "infante", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Asistencia> asistencias;
+    @ManyToOne
+    @JoinColumn(name = "maestra_id")
+    private Maestra maestra;
+    @ManyToOne
+    @JoinColumn(name = "sala_id")
+    private Sala sala;
 }

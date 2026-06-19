@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creciendo Juntxs - Gestión de Usuarios</title>
-    <link rel="stylesheet" th:href="@{/css/usuarios-lista.css}">
+    <link rel="stylesheet" th:href="@{/css/listas.css}">
 </head>
+
 <body>
 
     <nav class="navbar">
@@ -14,7 +16,7 @@
             <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
                 <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
             </a>
-            <div style="width: 2px; height: 32px; background-color: #e0e0e0;"></div>
+            <div class="navbar-divider"></div>
             <a th:href="@{/home}" style="text-decoration: none;">
                 <div>
                     <h1 class="project-text-logo">Creciendo Juntxs</h1>
@@ -51,18 +53,22 @@
                         </td>
                         <td>
                             <div class="actions-container">
-                                <a th:href="@{/usuarios/editar/{id}(id=${u.id})}" class="btn-action-grilla btn-editar">✏️ Editar</a>
-                                <a th:href="@{/usuarios/eliminar/{id}(id=${u.id})}" class="btn-action-grilla btn-eliminar"
-                                    onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario de forma permanente?');">🗑️ Eliminar</a>
+                                <a th:href="@{/usuarios/editar/{id}(id=${u.id})}"
+                                    class="btn-action-grilla btn-editar">✏️ Editar</a>
+                                <a th:href="@{/usuarios/eliminar/{id}(id=${u.id})}"
+                                    class="btn-action-grilla btn-eliminar"
+                                    onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario de forma permanente?');">🗑️
+                                    Eliminar</a>
                             </div>
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(lista)}">
-                        <td colspan="4" style="text-align: center; color: #999; padding: 20px;">No hay usuarios registrados en el sistema.</td>
+                        <td colspan="4" class="empty-msg">No hay usuarios registrados en el sistema.</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </body>
+
 </html>

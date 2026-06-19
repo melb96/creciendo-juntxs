@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creciendo Juntxs - Gestión de Salas</title>
+    <link rel="stylesheet" th:href="@{/css/listas.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand-box">
+            <a href="https://www.unlar.edu.ar/" target="_blank">
+                <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
+            </a>
+            <div class="navbar-divider"></div>
+            <a th:href="@{/home}" class="navbar-link-home" style="text-decoration: none;">
+                <div>
+                    <h1 class="project-text-logo">Creciendo Juntxs</h1>
+                    <p class="navbar-subtitle">Guardería - Universidad Nacional de La Rioja</p>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Gestión de Salas</h2>
+        <a href="/salas/nuevo" class="btn">➕ Nueva Sala</a>
+        <a href="/home" class="btn btn-secondary">🏠 Volver al Inicio</a>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Turno</th>
+                        <th>Capacidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="s : ${lista}">
+                        <td th:text="${s.nombre}"></td>
+                        <td th:text="${s.turno}"></td>
+                        <td th:text="${s.capacidad}"></td>
+                        <td>
+                            <div class="actions-container">
+                                <a th:href="@{/salas/editar/{id}(id=${s.id})}" class="btn-action-grilla btn-editar">✏️ Editar</a>
+                                
+                                <a th:href="@{/salas/eliminar/{id}(id=${s.id})}" 
+                                   class="btn-action-grilla btn-eliminar" 
+                                   onclick="return confirm('¿Estás seguro de que deseas eliminar esta sala?');">
+                                   🗑️ Eliminar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(lista)}">
+                        <td colspan="4" class="empty-msg">No hay salas registradas.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

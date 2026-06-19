@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creciendo Juntxs - Gestionar Sala</title>
+    <link rel="stylesheet" th:href="@{/css/formularios.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand-box">
+            <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
+                <img th:src="@{/images/logo-unlar.png}" alt="Logo UNLaR" class="logo-img">
+            </a>
+            <div class="navbar-divider"></div>
+            <a th:href="@{/home}" style="text-decoration: none;">
+                <div>
+                    <h1 class="project-text-logo">Creciendo Juntxs</h1>
+                    <p class="navbar-subtitle">Guardería - Universidad Nacional de La Rioja</p>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        <div class="form-container">
+            <h2 th:text="${sala.id != null} ? 'Formulario: Modificar Datos de la Sala' : 'Formulario: Registro de Nueva Sala'"></h2>
+
+            <div class="error-msg" th:if="${error}" th:text="${error}"></div>
+
+            <form th:action="${sala.id != null} ? @{/salas/actualizar} : @{/salas/guardar}" 
+                  th:object="${sala}" 
+                  method="POST">
+                
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="form-group">
+                    <label for="nombre">Nombre de la Sala / Grupo:</label>
+                    <input type="text" id="nombre" th:field="*{nombre}" required placeholder="Ej: Sala de Lactantes">
+                </div>
+
+                <div class="form-group">
+                    <label for="turno">Turno Asignado:</label>
+                    <select id="turno" th:field="*{turno}" required>
+                        <option value="">-- Seleccione un turno --</option>
+                        <option value="Mañana">Mañana (08:00 a 13:00)</option>
+                        <option value="Tarde">Tarde (14:00 a 19:00)</option>
+                        <option value="Turno Completo">Turno Completo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="capacidad">Capacidad Máxima (Cupos):</label>
+                    <input type="number" id="capacidad" th:field="*{capacidad}" required min="1" max="50" placeholder="Ej: 15">
+                </div>
+
+                <button type="submit" class="btn-submit" 
+                        th:text="${sala.id != null} ? '🔒 Guardar Cambios' : '✅ Registrar Sala'">
+                </button>
+                <a th:href="@{/salas}" class="btn-cancel">Volver a la Lista</a>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
