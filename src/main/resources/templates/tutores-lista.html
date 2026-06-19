@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
@@ -7,6 +8,7 @@
     <title>Creciendo Juntxs - Lista de Tutores</title>
     <link rel="stylesheet" th:href="@{/css/listas.css}">
 </head>
+
 <body>
 
     <nav class="navbar">
@@ -50,15 +52,18 @@
                         <td th:text="${t.telefono}"></td>
                         <td th:text="${t.relacionUniversitaria}"></td>
                         <td>
-                            <a th:if="${t.usuario == null}" th:href="@{/usuarios/nuevo-tutor(tutorId=${t.id})}"
+                            <a th:if="${t.usuario == null}" sec:authorize="hasAnyRole('ADMIN', 'OPERADOR')"
+                                th:href="@{/usuarios/nuevo-tutor(tutorId=${t.id})}"
                                 class="btn-action-grilla btn-crear">🔑 Crear Cuenta</a>
 
                             <span th:if="${t.usuario != null}" class="badge-activo">✔️ Cuenta Activa</span>
 
-                            <a th:href="@{/tutores/editar/{id}(id=${t.id})}" class="btn-action-grilla btn-editar">✏️ Editar</a>
+                            <a th:href="@{/tutores/editar/{id}(id=${t.id})}" class="btn-action-grilla btn-editar">✏️
+                                Editar</a>
 
                             <a th:href="@{/tutores/eliminar/{id}(id=${t.id})}" class="btn-action-grilla btn-eliminar"
-                                onclick="return confirm('¿Estás seguro de que deseas eliminar este tutor de forma permanente?');">🗑️ Eliminar</a>
+                                onclick="return confirm('¿Estás seguro de que deseas eliminar este tutor de forma permanente?');">🗑️
+                                Eliminar</a>
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(lista)}">
@@ -69,4 +74,5 @@
         </div>
     </div>
 </body>
+
 </html>

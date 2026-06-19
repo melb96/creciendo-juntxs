@@ -21,7 +21,7 @@ public class TutorWebController {
     @GetMapping
     public String listarTutores(Model model) {
         model.addAttribute("lista", tutorService.obtenerTodos());
-        return "tutores-lista"; // Busca templates/tutores-lista.html
+        return "tutores-lista";
     }
 
     @GetMapping("/nuevo")

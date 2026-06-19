@@ -41,15 +41,13 @@ public class SalaWebController {
         return "redirect:/salas";
     }
 
-    // Actualización: Cambiado a /actualizar
     @PostMapping("/actualizar")
     public String actualizar(Authentication auth, @ModelAttribute Sala sala) {
         if (!tienePermiso(auth)) return "redirect:/home";
-        salaService.registrarSala(sala); // Tu servicio usa registrarSala para guardar/actualizar
+        salaService.registrarSala(sala);
         return "redirect:/salas";
     }
 
-    // Eliminé el "/salas" extra de la ruta
     @GetMapping("/eliminar/{id}")
     public String eliminarSala(Authentication auth, @PathVariable Long id) {
         if (!tienePermiso(auth)) return "redirect:/home";
@@ -57,7 +55,6 @@ public class SalaWebController {
         return "redirect:/salas";
     }
 
-    // Eliminé el "/salas" extra de la ruta
     @GetMapping("/editar/{id}")
     public String editarSala(Authentication auth, @PathVariable Long id, Model model) {
         if (!tienePermiso(auth)) return "redirect:/home";

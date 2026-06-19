@@ -15,31 +15,34 @@ public class UsuarioWebController {
 
     private final UsuarioService usuarioService;
 
+    // --- MÉTODOS DE SEGURIDAD PRIVADOS ---
     private boolean esAdmin(Authentication auth) {
         return auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
+    private boolean esOperador(Authentication auth) {
+        return auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_OPERADOR"));
+    }
+
     @GetMapping
     public String listarUsuarios(Authentication auth, Model model) {
-        if (!esAdmin(auth))
-            return "redirect:/home";
+        if (!esAdmin(auth)) return "redirect:/home";
         model.addAttribute("lista", usuarioService.obtenerTodos());
         return "usuarios-lista";
     }
 
     @GetMapping("/nuevo")
     public String mostrarFormulario(Authentication auth, Model model) {
-        if (!esAdmin(auth))
-            return "redirect:/home";
+        if (!esAdmin(auth)) return "redirect:/home";
         model.addAttribute("usuario", new Usuario());
         return "usuarios-formulario";
     }
 
     @PostMapping("/guardar")
     public String guardarUsuario(Authentication auth, @ModelAttribute("usuario") Usuario usuario, Model model) {
-        if (!esAdmin(auth))
-            return "redirect:/home";
+        if (!esAdmin(auth)) return "redirect:/home";
         String resultado = usuarioService.registrarUsuario(usuario);
         if (resultado.startsWith("Error")) {
             model.addAttribute("error", resultado);
@@ -50,8 +53,7 @@ public class UsuarioWebController {
 
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(Authentication auth, @PathVariable("id") Long id, Model model) {
-        if (!esAdmin(auth))
-            return "redirect:/home";
+        if (!esAdmin(auth)) return "redirect:/home";
         Usuario usuario = usuarioService.obtenerPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + id));
         model.addAttribute("usuario", usuario);
@@ -60,24 +62,22 @@ public class UsuarioWebController {
 
     @PostMapping("/actualizar")
     public String actualizarUsuario(Authentication auth, @ModelAttribute("usuario") Usuario usuario) {
-        if (!esAdmin(auth))
-            return "redirect:/home";
+        if (!esAdmin(auth)) return "redirect:/home";
         usuarioService.actualizarUsuario(usuario);
         return "redirect:/usuarios";
     }
 
     @GetMapping("/eliminar/{id}")
     public String eliminarUsuario(Authentication auth, @PathVariable("id") Long id) {
-        if (!esAdmin(auth))
-            return "redirect:/home";
+        if (!esAdmin(auth)) return "redirect:/home";
         usuarioService.eliminarUsuario(id);
         return "redirect:/usuarios";
     }
 
     @GetMapping("/nuevo-tutor")
     public String mostrarFormularioTutor(Authentication auth, @RequestParam("tutorId") Long tutorId, Model model) {
-        if (!esAdmin(auth))
-            return "redirect:/home";
+        if (!esAdmin(auth) && !esOperador(auth)) return "redirect:/home";
+        
         Usuario usuario = new Usuario();
         usuario.setRole("TUTOR");
         model.addAttribute("usuario", usuario);
@@ -88,8 +88,8 @@ public class UsuarioWebController {
     @PostMapping("/guardar-tutor")
     public String guardarUsuarioTutor(Authentication auth, @ModelAttribute("usuario") Usuario usuario,
             @RequestParam("tutorId") Long tutorId, Model model) {
-        if (!esAdmin(auth))
-            return "redirect:/home";
+        if (!esAdmin(auth) && !esOperador(auth)) return "redirect:/home";
+        
         String resultado = usuarioService.registrarUsuarioTutor(usuario, tutorId);
         if (resultado.startsWith("Error")) {
             model.addAttribute("error", resultado);
@@ -111,12 +111,10 @@ public class UsuarioWebController {
             Model model) {
 
         String resultado = usuarioService.restablecerContraseniaPorDni(email, dni, nuevaPassword);
-
         if (resultado.startsWith("Error")) {
             model.addAttribute("error", resultado);
             return "usuarios-recuperar";
         }
-
         model.addAttribute("exito", "Contraseña restablecida correctamente.");
         return "redirect:/login";
     }

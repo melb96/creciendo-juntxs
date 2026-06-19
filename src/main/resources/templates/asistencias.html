@@ -29,24 +29,31 @@
 
     <div class="container">
         <h2>Control de Asistencia Diaria</h2>
-        <div class="btn btn-badge">📅 Fecha del sistema: <span th:text="${fechaHoy}"></span></div>
-        <a href="/home" class="btn btn-secondary">🏠 Volver al Inicio</a>
+        <div class="header-actions">
+            <div class="btn btn-badge">📅 Fecha del sistema: <span th:text="${fechaHoy}"></span></div>
+            <a href="/home" class="btn btn-secondary">🏠 Volver al Inicio</a>
+        </div>
 
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
                         <th>Niño/a</th>
+                        <th>Sala</th>
+                        <th>Maestra</th>
                         <th>Responsable (Tutor)</th>
                         <th>Estado Actual</th>
                         <th>Ingreso</th>
                         <th>Egreso</th>
-                        <th>Acciones / Notas de Bitácora</th>
+                        <th>Acciones / Notas</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="infante : ${infantes}">
                         <td class="nombre-nino" th:text="${infante.apellido} + ', ' + ${infante.nombre}"></td>
+                        <td th:text="${infante.sala != null ? infante.sala.nombre : 'Sin Sala'}"></td>
+                        <td th:text="${infante.maestra != null ? infante.maestra.apellido + ', ' + infante.maestra.nombre : 'Sin Asignar'}"></td>
+                        
                         <td th:text="${infante.tutor.apellido} + ', ' + ${infante.tutor.nombre}"></td>
 
                         <td>
@@ -71,8 +78,7 @@
                                 <div class="actions-group">
                                     <form th:action="@{/asistencias/egreso}" method="POST" class="form-asistencia">
                                         <input type="hidden" name="infanteId" th:value="${infante.id}">
-                                        <input type="text" name="bitacora" class="input-bitacora"
-                                            placeholder="Notas...">
+                                        <input type="text" name="bitacora" class="input-bitacora" placeholder="Notas...">
                                         <button type="submit" class="btn-action btn-egreso">■ Registrar Salida</button>
                                     </form>
                                     <button type="button" class="btn-action btn-alerta"
@@ -86,12 +92,10 @@
                             <td th:if="${yaSalio}" th:text="${ultimaAsistencia.horaSalida}"></td>
                             <td th:if="${yaSalio}">
                                 <div class="bitacora-group">
-                                    <span th:text="${ultimaAsistencia.bitacoraActividades}"
-                                        class="bitacora-display"></span>
+                                    <span th:text="${ultimaAsistencia.bitacoraActividades}" class="bitacora-display"></span>
                                     <form th:action="@{/asistencias/ingreso}" method="POST" class="form-asistencia">
                                         <input type="hidden" name="infanteId" th:value="${infante.id}">
-                                        <button type="submit" class="btn-action btn-ingreso btn-small">▶
-                                            Re-ingresar</button>
+                                        <button type="submit" class="btn-action btn-ingreso btn-small">▶ Re-ingresar</button>
                                     </form>
                                 </div>
                             </td>
@@ -99,8 +103,7 @@
                     </tr>
 
                     <tr th:if="${#lists.isEmpty(infantes)}">
-                        <td colspan="6" class="empty-msg">No hay infantes registrados en el sistema para esta
-                            asistencia.</td>
+                        <td colspan="8" class="empty-msg">No hay infantes registrados en el sistema para esta asistencia.</td>
                     </tr>
                 </tbody>
             </table>
@@ -108,5 +111,4 @@
     </div>
     <script th:src="@{/js/asistencias.js}"></script>
 </body>
-
 </html>

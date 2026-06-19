@@ -32,7 +32,7 @@ tr:hover { background-color: #f1f1f1; }
 .role-admin { background-color: #dc3545; }
 .role-operador { background-color: #007bff; }
 .role-tutor { background-color: #28a745; }
-.badge-activo { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; background-color: #28a745; }
+.badge-activo { padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; color: white; background-color: #28a745; }
 
 .actions-container { display: flex; gap: 5px; white-space: nowrap; }
 .btn-action-grilla { padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; text-decoration: none; color: white; }

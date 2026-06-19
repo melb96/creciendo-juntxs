@@ -75,9 +75,9 @@ public class InfanteWebController {
         return "redirect:/infantes";
     }
 
-    @PostMapping("/cambiar-estado")
+@PostMapping("/cambiar-estado")
     public String cambiarEstadoRapido(@RequestParam("infanteId") Long infanteId,
-            @RequestParam("nuevoEstado") String nuevoEstado) {
+                                      @RequestParam("nuevoEstado") String nuevoEstado) {
         Infante infante = infanteService.obtenerPorId(infanteId).orElseThrow();
         infante.setEstadoActual(nuevoEstado);
         infanteService.actualizarInfante(infante);
@@ -90,6 +90,8 @@ public class InfanteWebController {
                     a.setBitacoraActividades(nuevoEstado);
                     asistenciaService.actualizarAsistencia(a);
                 });
+
+        asistenciaService.enviarNotificacionATutor(infante, "El estado de " + infante.getNombre() + " cambió a: " + nuevoEstado);
 
         return "redirect:/infantes";
     }
