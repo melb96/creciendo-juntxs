@@ -74,11 +74,15 @@ public class InfanteService {
     }
 
     @Transactional
-    public String actualizarInfante(Infante infante) {
-        Infante infanteExistente = infanteRepository.findById(infante.getId())
+    public String actualizarInfante(Infante infanteActualizado) {
+        Infante infanteEnBD = infanteRepository.findById(infanteActualizado.getId())
                 .orElseThrow(() -> new RuntimeException("Infante no encontrado"));
-        infante.setEstadoActual(infanteExistente.getEstadoActual());
-        infanteRepository.save(infante);
+        Optional<Infante> infanteConMismoDni = infanteRepository.findByDni(infanteActualizado.getDni());
+        if (infanteConMismoDni.isPresent() && !infanteConMismoDni.get().getId().equals(infanteActualizado.getId())) {
+            return "Error: Ya existe otro infante registrado con el DNI " + infanteActualizado.getDni();
+        }
+        infanteActualizado.setEstadoActual(infanteEnBD.getEstadoActual());
+        infanteRepository.save(infanteActualizado);
         return "Infante actualizado con éxito";
     }
 

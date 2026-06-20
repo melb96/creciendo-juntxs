@@ -62,4 +62,20 @@ public class MaestraService {
     public void guardarMaestra(Maestra maestra) {
         maestraRepository.save(maestra);
     }
+
+    @Transactional
+    public String actualizarMaestra(Maestra maestraActualizada) {
+
+        Optional<Maestra> maestraConMismoDni = maestraRepository.findByDni(maestraActualizada.getDni());
+        if (maestraConMismoDni.isPresent() && !maestraConMismoDni.get().getId().equals(maestraActualizada.getId())) {
+            return "Error: Ya existe otra maestra registrada con el DNI " + maestraActualizada.getDni();
+        }
+        Optional<Maestra> maestraConMismoLegajo = maestraRepository.findByLegajo(maestraActualizada.getLegajo());
+        if (maestraConMismoLegajo.isPresent()
+                && !maestraConMismoLegajo.get().getId().equals(maestraActualizada.getId())) {
+            return "Error: Ya existe otra maestra registrada con el legajo " + maestraActualizada.getLegajo();
+        }
+        maestraRepository.save(maestraActualizada);
+        return "Maestra actualizada con éxito";
+    }
 }

@@ -74,13 +74,20 @@ public class InfanteWebController {
     public String actualizarInfante(@ModelAttribute("infante") Infante infante,
             @RequestParam("tutorId") Long tutorId,
             @RequestParam("maestraId") Long maestraId,
-            @RequestParam("salaId") Long salaId) {
+            @RequestParam("salaId") Long salaId,
+            RedirectAttributes redirectAttributes) {
 
         infante.setTutor(tutorService.obtenerPorId(tutorId).orElse(null));
         infante.setMaestra(maestraService.obtenerPorId(maestraId).orElse(null));
         infante.setSala(salaService.obtenerPorId(salaId).orElse(null));
 
-        infanteService.actualizarInfante(infante);
+        String resultado = infanteService.actualizarInfante(infante);
+
+        if (resultado.startsWith("Error")) {
+            redirectAttributes.addFlashAttribute("error", resultado);
+            return "redirect:/infantes/editar/" + infante.getId();
+        }
+
         return "redirect:/infantes";
     }
 

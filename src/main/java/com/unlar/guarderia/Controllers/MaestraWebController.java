@@ -73,8 +73,15 @@ public class MaestraWebController {
     }
 
     @PostMapping("/actualizar")
-    public String actualizar(@ModelAttribute Maestra maestra) {
-        maestraService.guardarMaestra(maestra);
+    public String actualizar(@ModelAttribute Maestra maestra, RedirectAttributes redirectAttributes) {
+
+        String resultado = maestraService.actualizarMaestra(maestra);
+
+        if (resultado.startsWith("Error")) {
+            redirectAttributes.addFlashAttribute("error", resultado);
+            return "redirect:/maestras/editar/" + maestra.getId();
+        }
+
         return "redirect:/maestras";
     }
 }
