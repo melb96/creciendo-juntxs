@@ -2,6 +2,7 @@ package com.unlar.guarderia.Services;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,15 +76,21 @@ public class AsistenciaService {
 
         Asistencia asistencia = asistenciaOpt.get();
         asistencia.setHoraSalida(LocalTime.now());
-        asistencia.setBitacoraActividades((bitacora != null && !bitacora.isBlank()) ? bitacora : "Retirado");
-        asistenciaRepository.saveAndFlush(asistencia);
+        String notaEgreso = (bitacora != null && !bitacora.isBlank()) ? bitacora : "Retirado";
+        String bitacoraExistente = asistencia.getBitacoraActividades();
 
+        String bitacoraFinal = (bitacoraExistente != null && !bitacoraExistente.isEmpty())
+                ? bitacoraExistente + " | " + notaEgreso
+                : notaEgreso;
+
+        asistencia.setBitacoraActividades(bitacoraFinal);
+        asistenciaRepository.saveAndFlush(asistencia);
         if (infante != null) {
             enviarNotificacionATutor(infante, "Egreso registrado: " + infante.getNombre() + " ha sido retirado.");
         }
-
         return "Egreso registrado con éxito. ¡El infante ya fue retirado!";
     }
+
     @Async
     public void enviarNotificacionATutor(Infante infante, String mensaje) {
         Infante infanteCompleto = infanteRepository.findById(infante.getId()).orElse(infante);
@@ -114,6 +121,37 @@ public class AsistenciaService {
 
     public List<Asistencia> obtenerHistorialPorInfante(Long infanteId) {
         return asistenciaRepository.findByInfanteIdOrderByFechaDescHoraEntradaDesc(infanteId);
+    }
+
+    @Transactional
+    public void generarAlertaIncidente(Long asistenciaId) {
+        Asistencia asistencia = asistenciaRepository.findById(asistenciaId)
+                .orElseThrow(() -> new RuntimeException("Asistencia no encontrada"));
+
+        Infante infante = asistencia.getInfante();
+
+        String horaFormateada = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+        String nuevoReporte = String.format(
+                "ALERTA [%s] | Sala: %s | Maestra: %s | Estado: %s | Infante: %s %s",
+                horaFormateada,
+                infante.getSala() != null ? infante.getSala().getNombre() : "Sin sala",
+                infante.getMaestra() != null
+                        ? infante.getMaestra().getNombre() + " " + infante.getMaestra().getApellido()
+                        : "Sin maestra",
+                infante.getEstadoActual(),
+                infante.getNombre(),
+                infante.getApellido());
+
+        String bitacoraExistente = asistencia.getBitacoraActividades();
+        String bitacoraActualizada = (bitacoraExistente == null || bitacoraExistente.isEmpty())
+                ? nuevoReporte
+                : bitacoraExistente + " | " + nuevoReporte;
+
+        asistencia.setBitacoraActividades(bitacoraActualizada);
+        asistenciaRepository.save(asistencia);
+
+        enviarNotificacionATutor(infante, "Alerta de Incidente registrada: " + nuevoReporte);
     }
 
 }

@@ -35,7 +35,7 @@
                   th:class="'badge-role ' + (${rolLimpio} == 'ADMIN' ? 'badge-admin' : (${rolLimpio} == 'OPERADOR' ? 'badge-operador' : 'badge-tutor'))">
             </span>
         </div>
-        <button onclick="registrarSuscripcion()" class="btn-push" style="cursor:pointer; padding: 8px; border-radius: 5px;">
+        <button th:if="${rolLimpio == 'TUTOR'}" onclick="registrarSuscripcion()" class="btn-push" style="cursor:pointer; padding: 8px; border-radius: 5px;">
             🔔 Recibir Notificaciones
         </button>
     </div>

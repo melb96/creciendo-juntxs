@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
-
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
@@ -9,9 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/listas.css}">
     <link rel="stylesheet" th:href="@{/css/asistencias.css}">
 </head>
-
 <body>
-
     <nav class="navbar">
         <div class="navbar-brand-box">
             <a href="https://www.unlar.edu.ar/" target="_blank" rel="noopener noreferrer">
@@ -53,17 +50,11 @@
                         <td class="nombre-nino" th:text="${infante.apellido} + ', ' + ${infante.nombre}"></td>
                         <td th:text="${infante.sala != null ? infante.sala.nombre : 'Sin Sala'}"></td>
                         <td th:text="${infante.maestra != null ? infante.maestra.apellido + ', ' + infante.maestra.nombre : 'Sin Asignar'}"></td>
-                        
                         <td th:text="${infante.tutor.apellido} + ', ' + ${infante.tutor.nombre}"></td>
-
                         <td>
-                            <span th:text="${infante.estadoActual}"
-                                th:class="'status ' + (${infante.estadoActual} == 'Comiendo' ? 'status-comiendo' : (${infante.estadoActual} == 'Durmiendo' ? 'status-durmiendo' : (${infante.estadoActual} == 'Jugando' ? 'status-jugando' : (${infante.estadoActual} == 'Retirado' ? 'status-retirado' : (${infante.estadoActual} == 'En Sala' ? 'status-sala' : 'status-sin-ingresar')))))"></span>
+                            <span th:text="${infante.estadoActual}" th:class="'status ' + (${infante.estadoActual} == 'Comiendo' ? 'status-comiendo' : (${infante.estadoActual} == 'Durmiendo' ? 'status-durmiendo' : (${infante.estadoActual} == 'Jugando' ? 'status-jugando' : (${infante.estadoActual} == 'Retirado' ? 'status-retirado' : (${infante.estadoActual} == 'En Sala' ? 'status-sala' : 'status-sin-ingresar')))))"></span>
                         </td>
-
-                        <th:block
-                            th:with="asistenciasDelNiño=${asistenciasHoy.?[infante.id == __${infante.id}__]}, tieneAsistencia=!${asistenciasDelNiño.isEmpty()}, ultimaAsistencia=${tieneAsistencia ? asistenciasDelNiño[asistenciasDelNiño.size() - 1] : null}, estaAdentro=${tieneAsistencia && ultimaAsistencia.horaSalida == null}, yaSalio=${tieneAsistencia && ultimaAsistencia.horaSalida != null}">
-
+                        <th:block th:with="asistenciasDelNiño=${asistenciasHoy.?[infante.id == __${infante.id}__]}, tieneAsistencia=!${asistenciasDelNiño.isEmpty()}, ultimaAsistencia=${tieneAsistencia ? asistenciasDelNiño[asistenciasDelNiño.size() - 1] : null}, estaAdentro=${tieneAsistencia && ultimaAsistencia.horaSalida == null}, yaSalio=${tieneAsistencia && ultimaAsistencia.horaSalida != null}">
                             <td th:if="${!tieneAsistencia}" colspan="2">-</td>
                             <td th:if="${!tieneAsistencia}">
                                 <form th:action="@{/asistencias/ingreso}" method="POST" class="form-asistencia">
@@ -71,7 +62,6 @@
                                     <button type="submit" class="btn-action btn-ingreso">▶ Registrar Ingreso</button>
                                 </form>
                             </td>
-
                             <td th:if="${estaAdentro}" th:text="${ultimaAsistencia.horaEntrada}"></td>
                             <td th:if="${estaAdentro}">-</td>
                             <td th:if="${estaAdentro}">
@@ -81,18 +71,16 @@
                                         <input type="text" name="bitacora" class="input-bitacora" placeholder="Notas...">
                                         <button type="submit" class="btn-action btn-egreso">■ Registrar Salida</button>
                                     </form>
-                                    <button type="button" class="btn-action btn-alerta"
-                                        th:onclick="dispararAlertaWhatsApp([[${infante.tutor.telefono}]], [[${infante.nombre}]], [[${infante.apellido}]])">
-                                        🚨 Alerta
-                                    </button>
+                                    <form th:id="'form-alerta-' + ${ultimaAsistencia.id}" th:action="@{/asistencias/alerta/{id}(id=${ultimaAsistencia.id})}" method="POST" style="display:inline;">
+                                        <button type="button" class="btn-action btn-alerta" th:data-telefono="${infante.tutor.telefono}" th:data-nombre="${infante.nombre}" th:data-apellido="${infante.apellido}" th:data-id="${ultimaAsistencia.id}" onclick="ejecutarAlertaSegura(this)">🚨 Alerta</button>
+                                    </form>
                                 </div>
                             </td>
-
                             <td th:if="${yaSalio}" th:text="${ultimaAsistencia.horaEntrada}"></td>
                             <td th:if="${yaSalio}" th:text="${ultimaAsistencia.horaSalida}"></td>
                             <td th:if="${yaSalio}">
                                 <div class="bitacora-group">
-                                    <span th:text="${ultimaAsistencia.bitacoraActividades}" class="bitacora-display"></span>
+                                    <span th:utext="${ultimaAsistencia.bitacoraActividades != null ? ultimaAsistencia.bitacoraActividades.replace('|', '<br>') : ''}" class="bitacora-display"></span>
                                     <form th:action="@{/asistencias/ingreso}" method="POST" class="form-asistencia">
                                         <input type="hidden" name="infanteId" th:value="${infante.id}">
                                         <button type="submit" class="btn-action btn-ingreso btn-small">▶ Re-ingresar</button>
@@ -101,9 +89,8 @@
                             </td>
                         </th:block>
                     </tr>
-
                     <tr th:if="${#lists.isEmpty(infantes)}">
-                        <td colspan="8" class="empty-msg">No hay infantes registrados en el sistema para esta asistencia.</td>
+                        <td colspan="8" class="empty-msg">No hay infantes registrados para esta asistencia.</td>
                     </tr>
                 </tbody>
             </table>

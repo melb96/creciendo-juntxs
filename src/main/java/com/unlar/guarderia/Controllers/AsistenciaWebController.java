@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -41,6 +42,17 @@ public class AsistenciaWebController {
     public String procesarEgreso(@RequestParam("infanteId") Long infanteId,
             @RequestParam(value = "bitacora", required = false) String bitacora) {
         asistenciaService.registrarEgreso(infanteId, bitacora);
+        return "redirect:/asistencias";
+    }
+
+    @PostMapping("/alerta/{id}")
+    public String dispararAlerta(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            asistenciaService.generarAlertaIncidente(id);
+            redirectAttributes.addFlashAttribute("success", "Alerta generada y notificación enviada al tutor.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al generar la alerta: " + e.getMessage());
+        }
         return "redirect:/asistencias";
     }
 }
