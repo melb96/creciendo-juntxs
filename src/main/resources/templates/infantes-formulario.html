@@ -114,11 +114,24 @@
                             placeholder="Información adicional relevante..."></textarea>
                     </div>
 
-                    <div class="form-group">
-                        <label style="display: flex; align-items: center; gap: 10px;">
-                            <input type="checkbox" th:field="*{consienteCamara}" style="width: auto;">
-                            ¿Autoriza monitoreo por cámara?
-                        </label>
+                    <div class="form-group"
+                        style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; background: #f9f9f9; margin-top: 15px;">
+                        <p style="font-size: 0.85em; text-align: justify; margin-bottom: 10px; color: #555;">
+                            <strong>Autorización de monitoreo:</strong> Autorizo que el niño/a pueda ser visualizado
+                            mediante el módulo de monitoreo en vivo del sistema Creciendo Juntxs, exclusivamente por
+                            personal autorizado y/o por sus responsables parentales habilitados, con fines de seguridad,
+                            acompañamiento y seguimiento institucional. Declaro haber sido informado/a sobre el alcance,
+                            finalidad, condiciones de acceso y posibilidad de revocar esta autorización.
+                        </p>
+
+                        <div style="display: flex; gap: 20px; font-weight: bold;">
+                            <label>
+                                <input type="radio" th:field="*{consienteCamara}" value="true" required> Acepto
+                            </label>
+                            <label>
+                                <input type="radio" th:field="*{consienteCamara}" value="true" required> No acepto
+                            </label>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn-submit"

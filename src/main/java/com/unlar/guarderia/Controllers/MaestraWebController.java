@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/maestras")
@@ -37,10 +38,17 @@ public class MaestraWebController {
     }
 
     @PostMapping("/guardar")
-    public String guardar(Authentication auth, @ModelAttribute Maestra maestra) {
+    public String guardar(Authentication auth, @ModelAttribute Maestra maestra, RedirectAttributes redirectAttributes) {
         if (!tienePermiso(auth))
             return "redirect:/home";
-        maestraService.registrarMaestra(maestra);
+
+        String resultado = maestraService.registrarMaestra(maestra);
+
+        if (resultado.startsWith("Error")) {
+            redirectAttributes.addFlashAttribute("error", resultado);
+            return "redirect:/maestras/nuevo";
+        }
+
         return "redirect:/maestras";
     }
 

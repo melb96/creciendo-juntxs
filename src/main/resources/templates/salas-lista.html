@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" th:href="@{/images/logo-unlar.png}">
@@ -7,6 +8,7 @@
     <title>Creciendo Juntxs - Gestión de Salas</title>
     <link rel="stylesheet" th:href="@{/css/listas.css}">
 </head>
+
 <body>
 
     <nav class="navbar">
@@ -36,6 +38,7 @@
                         <th>Nombre</th>
                         <th>Turno</th>
                         <th>Capacidad</th>
+                        <th>Cupos</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -45,13 +48,15 @@
                         <td th:text="${s.turno}"></td>
                         <td th:text="${s.capacidad}"></td>
                         <td>
+                            <span th:text="${salaService.obtenerCupoTexto(s.id)}">0/0</span>
+                        </td>
+                        <td>
                             <div class="actions-container">
-                                <a th:href="@{/salas/editar/{id}(id=${s.id})}" class="btn-action-grilla btn-editar">✏️ Editar</a>
-                                
-                                <a th:href="@{/salas/eliminar/{id}(id=${s.id})}" 
-                                   class="btn-action-grilla btn-eliminar" 
-                                   onclick="return confirm('¿Estás seguro de que deseas eliminar esta sala?');">
-                                   🗑️ Eliminar
+                                <a th:href="@{/salas/editar/{id}(id=${s.id})}" class="btn-action-grilla btn-editar">✏️
+                                    Editar</a>
+                                <a th:href="@{/salas/eliminar/{id}(id=${s.id})}" class="btn-action-grilla btn-eliminar"
+                                    onclick="return confirm('¿Estás seguro de que deseas eliminar esta sala?');">
+                                    🗑️ Eliminar
                                 </a>
                             </div>
                         </td>
@@ -64,4 +69,5 @@
         </div>
     </div>
 </body>
+
 </html>

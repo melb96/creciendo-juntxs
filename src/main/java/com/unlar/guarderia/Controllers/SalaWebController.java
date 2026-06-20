@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/salas")
@@ -14,6 +15,12 @@ import org.springframework.web.bind.annotation.*;
 public class SalaWebController {
 
     private final SalaService salaService;
+
+    // Esto hace que salaService esté disponible en todos los templates manejados por este controlador
+    @ModelAttribute("salaService")
+    public SalaService getSalaService() {
+        return salaService;
+    }
 
     private boolean tienePermiso(Authentication auth) {
         return auth.getAuthorities().stream()
@@ -35,9 +42,13 @@ public class SalaWebController {
     }
 
     @PostMapping("/guardar")
-    public String guardar(Authentication auth, @ModelAttribute Sala sala) {
+    public String guardar(Authentication auth, @ModelAttribute Sala sala, RedirectAttributes redirectAttributes) {
         if (!tienePermiso(auth)) return "redirect:/home";
-        salaService.registrarSala(sala);
+        String resultado = salaService.registrarSala(sala);
+        if (resultado.startsWith("Error")) {
+            redirectAttributes.addFlashAttribute("error", resultado);
+            return "redirect:/salas/nuevo";
+        }
         return "redirect:/salas";
     }
 

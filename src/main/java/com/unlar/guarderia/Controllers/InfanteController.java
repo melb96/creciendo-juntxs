@@ -23,8 +23,8 @@ public class InfanteController {
     private final InfanteService infanteService;
 
     @PostMapping("/registrar")
-    public String registrar(@RequestBody Infante infante, @RequestParam Long tutorId) {
-        return infanteService.registrarInfante(infante, tutorId);
+    public String registrar(@RequestBody Infante infante, @RequestParam Long tutorId, @RequestParam Long salaId) {
+        return infanteService.registrarInfante(infante, tutorId, salaId);
     }
 
     @GetMapping

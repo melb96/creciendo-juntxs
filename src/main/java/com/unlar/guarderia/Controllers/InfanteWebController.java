@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 
@@ -37,12 +38,20 @@ public class InfanteWebController {
     public String guardarInfante(@ModelAttribute("infante") Infante infante,
             @RequestParam("tutorId") Long tutorId,
             @RequestParam("maestraId") Long maestraId,
-            @RequestParam("salaId") Long salaId) {
+            @RequestParam("salaId") Long salaId,
+            RedirectAttributes redirectAttributes) {
 
         infante.setMaestra(maestraService.obtenerPorId(maestraId).orElse(null));
         infante.setSala(salaService.obtenerPorId(salaId).orElse(null));
 
-        infanteService.registrarInfante(infante, tutorId);
+        // Llamada al servicio que tiene toda la lógica de validación
+        String resultado = infanteService.registrarInfante(infante, tutorId, salaId);
+
+        if (resultado.startsWith("Error")) {
+            redirectAttributes.addFlashAttribute("error", resultado);
+            return "redirect:/infantes/nuevo";
+        }
+
         return "redirect:/infantes";
     }
 
@@ -75,9 +84,9 @@ public class InfanteWebController {
         return "redirect:/infantes";
     }
 
-@PostMapping("/cambiar-estado")
+    @PostMapping("/cambiar-estado")
     public String cambiarEstadoRapido(@RequestParam("infanteId") Long infanteId,
-                                      @RequestParam("nuevoEstado") String nuevoEstado) {
+            @RequestParam("nuevoEstado") String nuevoEstado) {
         Infante infante = infanteService.obtenerPorId(infanteId).orElseThrow();
         infante.setEstadoActual(nuevoEstado);
         infanteService.actualizarInfante(infante);
@@ -91,7 +100,8 @@ public class InfanteWebController {
                     asistenciaService.actualizarAsistencia(a);
                 });
 
-        asistenciaService.enviarNotificacionATutor(infante, "El estado de " + infante.getNombre() + " cambió a: " + nuevoEstado);
+        asistenciaService.enviarNotificacionATutor(infante,
+                "El estado de " + infante.getNombre() + " cambió a: " + nuevoEstado);
 
         return "redirect:/infantes";
     }

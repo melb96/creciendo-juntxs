@@ -21,8 +21,18 @@ public class MaestraService {
     private final InfanteRepository infanteRepository;
 
     @Transactional
-    public void registrarMaestra(Maestra maestra) {
+    public String registrarMaestra(Maestra maestra) {
+
+        if (maestraRepository.existsByDni(maestra.getDni())) {
+            return "Error: Ya existe una maestra registrada con el DNI " + maestra.getDni();
+        }
+
+        if (maestraRepository.existsByLegajo(maestra.getLegajo())) {
+            return "Error: Ya existe una maestra registrada con el legajo " + maestra.getLegajo();
+        }
+
         maestraRepository.save(maestra);
+        return "Maestra registrada con éxito.";
     }
 
     @Transactional(readOnly = true)

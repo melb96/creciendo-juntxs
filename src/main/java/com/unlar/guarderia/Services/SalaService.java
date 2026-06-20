@@ -19,8 +19,22 @@ public class SalaService {
     private final InfanteRepository infanteRepository;
 
     @Transactional
-    public void registrarSala(Sala sala) {
+    public String registrarSala(Sala sala) {
+        // Validación: verificar si el nombre ya existe
+        if (salaRepository.existsByNombre(sala.getNombre())) {
+            return "Error: Ya existe una sala con el nombre '" + sala.getNombre() + "'.";
+        }
         salaRepository.save(sala);
+        return "Sala registrada con éxito.";
+    }
+
+    // Nuevo método para obtener cupos (ej: 2/5)
+    @Transactional(readOnly = true)
+    public String obtenerCupoTexto(Long id) {
+        Sala sala = salaRepository.findById(id).orElse(null);
+        if (sala == null) return "N/A";
+        long ocupados = infanteRepository.findBySalaId(id).size();
+        return ocupados + "/" + sala.getCapacidad();
     }
 
     @Transactional(readOnly = true)
