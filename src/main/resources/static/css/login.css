@@ -1,33 +1,190 @@
-body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+/* Estructura base */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    /* Coloca los elementos uno debajo del otro */
+    min-height: 100vh;
+    /* Asegura que ocupe toda la pantalla */
+}
 
-.login-container { background: white; padding: 35px 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 360px; border-top: 5px solid #145D96; box-sizing: border-box; }
+/* El wrapper ocupa todo el espacio posible, centrando el login */
+.wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
 
-.brand-header { text-align: center; margin-bottom: 25px; }
-.brand-header a { text-decoration: none; display: block; }
+.login-container {
+    background: white;
+    padding: 35px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 360px;
+    border-top: 5px solid #145D96;
+    box-sizing: border-box;
+}
 
-.logo-img { height: 60px; width: auto; object-fit: contain; margin-bottom: 12px; transition: transform 0.2s; }
-.logo-img:hover { transform: scale(1.05); }
+/* ... resto de tus estilos originales se mantienen igual ... */
+.brand-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
 
-.project-text-logo { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 24px; font-weight: 800; color: #145D96; letter-spacing: -0.5px; text-transform: uppercase; margin: 0; }
-.navbar-subtitle { font-size: 11px; color: #666; margin: 3px 0 0 0; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; }
+.brand-header a {
+    text-decoration: none;
+    display: block;
+}
 
-.form-group { margin-bottom: 18px; }
-label { display: block; margin-bottom: 6px; color: #555; font-weight: bold; font-size: 14px; }
-input { width: 100%; padding: 11px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 14px; color: #333; }
-input:focus { border-color: #145D96; outline: none; }
+.logo-img {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 12px;
+    transition: transform 0.2s;
+}
 
-button { width: 100%; padding: 11px; background-color: #145D96; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 15px; font-weight: bold; margin-top: 10px; transition: background-color 0.2s; }
-button:hover { background-color: #0d436d; }
+.logo-img:hover {
+    transform: scale(1.05);
+}
 
-.error-msg { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 4px; text-align: center; margin-bottom: 18px; font-size: 14px; }
-.success-msg { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 10px; border-radius: 4px; text-align: center; margin-bottom: 18px; font-size: 14px; }
+.project-text-logo {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #145D96;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    margin: 0;
+}
 
-.link-recuperar { display: block; text-align: center; margin-top: 20px; color: #145D96; text-decoration: none; font-size: 13px; font-weight: bold; }
-.link-recuperar:hover { text-decoration: underline; color: #0d436d; }
+.navbar-subtitle {
+    font-size: 11px;
+    color: #666;
+    margin: 3px 0 0 0;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    color: #555;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #333;
+}
+
+input:focus {
+    border-color: #145D96;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 11px;
+    background-color: #145D96;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #0d436d;
+}
+
+.error-msg {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    margin-bottom: 18px;
+    font-size: 14px;
+}
+
+.success-msg {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    margin-bottom: 18px;
+    font-size: 14px;
+}
+
+.link-recuperar {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #145D96;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.link-recuperar:hover {
+    text-decoration: underline;
+    color: #0d436d;
+}
 
 @media (max-width: 480px) {
-    .login-container { padding: 25px 20px; border-radius: 6px; }
-    .project-text-logo { font-size: 21px; }
-    .logo-img { height: 50px; }
-    input, button { padding: 13px; font-size: 15px; }
+    .login-container {
+        padding: 25px 20px;
+        border-radius: 6px;
+    }
+
+    .project-text-logo {
+        font-size: 21px;
+    }
+
+    .logo-img {
+        height: 50px;
+    }
+
+    input,
+    button {
+        padding: 13px;
+        font-size: 15px;
+    }
+}
+
+.footer-institucional {
+    background-color: #ffffff;
+    border-top: 3px solid #145D96;
+    padding: 8px;
+    text-align: center;
+    color: #666;
+    font-family: Arial, sans-serif;
+    font-size: 0.9em;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    box-sizing: border-box;
 }

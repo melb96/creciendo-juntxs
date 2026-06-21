@@ -29,3 +29,16 @@
     .btn-action { width: 100%; display: block; margin-top: 5px; }
     .input-bitacora { width: 100%; }
 }
+.footer-institucional {
+    background-color: #ffffff; 
+    border-top: 3px solid #145D96; /* Borde superior igual que el inferior del nav */
+    padding: 8px;
+    margin-top: 50px;
+    text-align: center;
+    color: #666;
+    font-family: Arial, sans-serif;
+    font-size: 0.9em;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.05); /* Sombra invertida para que sea consistente */
+    width: 100%;
+    box-sizing: border-box;
+}

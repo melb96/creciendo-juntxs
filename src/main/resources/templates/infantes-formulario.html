@@ -48,99 +48,67 @@
                 </div>
                 <div class="form-group">
                     <label for="dni">DNI (Sin puntos):</label>
-                    <input type="text" id="dni" th:field="*{dni}" required placeholder="Ej: 58123456" </div>
-                    <div class="form-group">
-                        <label for="fechaNacimiento">Fecha de Nacimiento:</label>
-                        <input type="date" id="fechaNacimiento" th:field="*{fechaNacimiento}" required>
-                    </div>
+                    <input type="text" id="dni" th:field="*{dni}" required placeholder="Ej: 58123456">
+                </div>
+                <div class="form-group">
+                    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" id="fechaNacimiento" th:field="*{fechaNacimiento}" required>
+                </div>
 
-                    <div class="form-group">
-                        <label for="tutorId">Responsable Parental:</label>
-                        <select id="tutorId" name="tutorId" required>
-                            <option value="">-- Seleccione tutor --</option>
-                            <option th:each="t : ${tutores}" th:value="${t.id}"
-                                th:text="${t.apellido} + ', ' + ${t.nombre}"
-                                th:selected="${infante.tutor != null && t.id == infante.tutor.id}">
-                            </option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label for="tutorId">Responsable Parental:</label>
+                    <select id="tutorId" name="tutorId" required>
+                        <option value="">-- Seleccione tutor --</option>
+                        <option th:each="t : ${tutores}" th:value="${t.id}" th:text="${t.apellido} + ', ' + ${t.nombre}"
+                            th:selected="${infante.tutor != null && t.id == infante.tutor.id}"></option>
+                    </select>
+                </div>
 
-                    <div class="form-group">
-                        <label for="maestraId">Maestra Asignada:</label>
-                        <select id="maestraId" name="maestraId" required>
-                            <option value="">-- Seleccione maestra --</option>
-                            <option th:each="m : ${maestras}" th:value="${m.id}"
-                                th:text="${m.nombre} + ' ' + ${m.apellido}"
-                                th:selected="${infante.maestra != null && m.id == infante.maestra.id}">
-                            </option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label for="maestraId">Maestra Asignada:</label>
+                    <select id="maestraId" name="maestraId" required>
+                        <option value="">-- Seleccione maestra --</option>
+                        <option th:each="m : ${maestras}" th:value="${m.id}" th:text="${m.nombre} + ' ' + ${m.apellido}"
+                            th:selected="${infante.maestra != null && m.id == infante.maestra.id}"></option>
+                    </select>
+                </div>
 
-                    <div class="form-group">
-                        <label for="salaId">Sala:</label>
-                        <select id="salaId" name="salaId" required>
-                            <option value="">-- Seleccione sala --</option>
-                            <option th:each="s : ${salas}" th:value="${s.id}" th:text="${s.nombre}"
-                                th:selected="${infante.sala != null && s.id == infante.sala.id}">
-                            </option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label for="salaId">Sala:</label>
+                    <select id="salaId" name="salaId" required>
+                        <option value="">-- Seleccione sala --</option>
+                        <option th:each="s : ${salas}" th:value="${s.id}" th:text="${s.nombre}"
+                            th:selected="${infante.sala != null && s.id == infante.sala.id}"></option>
+                    </select>
+                </div>
 
-                    <div class="form-group">
-                        <label for="alergias">Alergias:</label>
-                        <input type="text" id="alergias" th:field="*{alergias}" placeholder="Ej: Alérgico al maní...">
+                <div class="form-group"
+                    style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; background: #f9f9f9; margin-top: 15px;">
+                    <p style="font-size: 0.85em; text-align: justify; margin-bottom: 10px; color: #555;">
+                        <strong>Autorización de monitoreo:</strong> Autorizo que el niño/a pueda ser visualizado
+                        mediante el módulo de monitoreo en vivo del sistema Creciendo Juntxs, exclusivamente por
+                        personal autorizado y/o por sus responsables parentales habilitados, con fines de seguridad,
+                        acompañamiento y seguimiento institucional. Declaro haber sido informado/a sobre el alcance,
+                        finalidad, condiciones de acceso y posibilidad de revocar esta autorización.
+                    </p>
+                    <div style="display: flex; gap: 20px; font-weight: bold;">
+                        <label>
+                            <input type="radio" th:field="*{consienteCamara}" value="true" required> Acepto
+                        </label>
+                        <label>
+                            <input type="radio" th:field="*{consienteCamara}" value="false" required> No acepto
+                        </label>
                     </div>
-                    <div class="form-group">
-                        <label for="obraSocial">Obra Social:</label>
-                        <input type="text" id="obraSocial" th:field="*{obraSocial}" placeholder="Ej: OSUNLAR">
-                    </div>
-                    <div class="form-group">
-                        <label for="medicacion">Medicación habitual:</label>
-                        <input type="text" id="medicacion" th:field="*{medicacion}" placeholder="Ej: Ninguna">
-                    </div>
-                    <div class="form-group">
-                        <label for="contactosEmergencia">Contactos Emergencia:</label>
-                        <input type="text" id="contactosEmergencia" th:field="*{contactosEmergencia}"
-                            placeholder="Ej: 3804XXXXXX">
-                    </div>
-                    <div class="form-group">
-                        <label for="autorizadosRetiro">Autorizados para retiro:</label>
-                        <input type="text" id="autorizadosRetiro" th:field="*{autorizadosRetiro}"
-                            placeholder="Ej: Madre, Padre, Abuela">
-                    </div>
-                    <div class="form-group">
-                        <label for="observaciones">Observaciones:</label>
-                        <textarea id="observaciones" th:field="*{observaciones}"
-                            placeholder="Información adicional relevante..."></textarea>
-                    </div>
+                </div>
 
-                    <div class="form-group"
-                        style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; background: #f9f9f9; margin-top: 15px;">
-                        <p style="font-size: 0.85em; text-align: justify; margin-bottom: 10px; color: #555;">
-                            <strong>Autorización de monitoreo:</strong> Autorizo que el niño/a pueda ser visualizado
-                            mediante el módulo de monitoreo en vivo del sistema Creciendo Juntxs, exclusivamente por
-                            personal autorizado y/o por sus responsables parentales habilitados, con fines de seguridad,
-                            acompañamiento y seguimiento institucional. Declaro haber sido informado/a sobre el alcance,
-                            finalidad, condiciones de acceso y posibilidad de revocar esta autorización.
-                        </p>
-
-                        <div style="display: flex; gap: 20px; font-weight: bold;">
-                            <label>
-                                <input type="radio" th:field="*{consienteCamara}" value="true" required> Acepto
-                            </label>
-                            <label>
-                                <input type="radio" th:field="*{consienteCamara}" value="true" required> No acepto
-                            </label>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn-submit"
-                        th:text="${infante.id != null} ? '🔒 Guardar Cambios' : '➕ Inscribir Niño/a'"></button>
-                    <a href="/infantes" class="btn-cancel">Volver a la Lista</a>
+                <button type="submit" class="btn-submit"
+                    th:text="${infante.id != null} ? '🔒 Guardar Cambios' : '➕ Inscribir Niño/a'"></button>
+                <a href="/infantes" class="btn-cancel">Volver a la Lista</a>
             </form>
         </div>
     </div>
 
+    <div th:replace="~{footer :: pie}"></div>
 </body>
 
 </html>

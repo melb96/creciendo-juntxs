@@ -39,10 +39,12 @@ public class InfanteWebController {
             @RequestParam("tutorId") Long tutorId,
             @RequestParam("maestraId") Long maestraId,
             @RequestParam("salaId") Long salaId,
+            @RequestParam("consienteCamara") boolean consienteCamara, 
             RedirectAttributes redirectAttributes) {
 
         infante.setMaestra(maestraService.obtenerPorId(maestraId).orElse(null));
         infante.setSala(salaService.obtenerPorId(salaId).orElse(null));
+        infante.setConsienteCamara(consienteCamara);
 
         // Llamada al servicio que tiene toda la lógica de validación
         String resultado = infanteService.registrarInfante(infante, tutorId, salaId);
@@ -75,11 +77,13 @@ public class InfanteWebController {
             @RequestParam("tutorId") Long tutorId,
             @RequestParam("maestraId") Long maestraId,
             @RequestParam("salaId") Long salaId,
+            @RequestParam("consienteCamara") boolean consienteCamara,
             RedirectAttributes redirectAttributes) {
 
         infante.setTutor(tutorService.obtenerPorId(tutorId).orElse(null));
         infante.setMaestra(maestraService.obtenerPorId(maestraId).orElse(null));
         infante.setSala(salaService.obtenerPorId(salaId).orElse(null));
+        infante.setConsienteCamara(consienteCamara);
 
         String resultado = infanteService.actualizarInfante(infante);
 
