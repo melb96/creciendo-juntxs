@@ -32,6 +32,56 @@
 
         <a href="/infantes" class="btn btn-secondary">⬅ Volver a Legajos</a>
 
+        <section class="timeline-section">
+            <h3>Linea de tiempo de actividades diarias</h3>
+
+            <div class="timeline" th:if="${!#lists.isEmpty(actividades)}">
+                <article th:each="act : ${actividades}"
+                         th:classappend="${act.tipoEvento.name() == 'ALERTA' ? ' timeline-item-alerta' : ''}"
+                         class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-card-header">
+                            <div>
+                                <span th:class="${act.tipoEvento.name() == 'ALERTA' ? 'event-badge event-alerta' : 'event-badge'}"
+                                      th:text="${act.tipoEvento}"></span>
+                                <span th:class="${act.prioridad.name() == 'URGENTE' ? 'priority-badge priority-urgente' : (act.prioridad.name() == 'ALTA' ? 'priority-badge priority-alta' : 'priority-badge priority-normal')}"
+                                      th:text="${act.prioridad}"></span>
+                            </div>
+                            <time th:text="${#temporals.format(act.fechaHora, 'dd/MM/yyyy HH:mm:ss')}"></time>
+                        </div>
+
+                        <p class="timeline-description"
+                           th:text="${act.descripcion != null && !act.descripcion.isBlank() ? act.descripcion : 'Sin descripcion'}"></p>
+
+                        <div class="timeline-details">
+                            <div>
+                                <span>Estado anterior</span>
+                                <strong th:text="${act.estadoAnterior != null && !act.estadoAnterior.isBlank() ? act.estadoAnterior : '-'}"></strong>
+                            </div>
+                            <div>
+                                <span>Estado nuevo</span>
+                                <strong th:text="${act.estadoNuevo != null && !act.estadoNuevo.isBlank() ? act.estadoNuevo : '-'}"></strong>
+                            </div>
+                            <div>
+                                <span>Canal</span>
+                                <strong th:text="${act.canalNotificacion != null && !act.canalNotificacion.isBlank() ? act.canalNotificacion : '-'}"></strong>
+                            </div>
+                            <div>
+                                <span>Notificado</span>
+                                <strong th:text="${act.notificadoTutor ? 'Si' : 'No'}"></strong>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div th:if="${#lists.isEmpty(actividades)}" class="empty-msg timeline-empty">
+                Este infante todavia no registra actividades diarias.
+            </div>
+        </section>
+
+        <h3 class="legacy-history-title">Historial de asistencias y bitacora anterior</h3>
         <div class="table-responsive">
             <table>
                 <thead>

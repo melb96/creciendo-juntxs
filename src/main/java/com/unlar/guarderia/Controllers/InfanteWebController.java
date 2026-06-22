@@ -20,6 +20,7 @@ public class InfanteWebController {
     private final AsistenciaService asistenciaService;
     private final MaestraService maestraService;
     private final SalaService salaService;
+    private final ActividadInfanteService actividadInfanteService;
 
     @GetMapping
     public String listarInfantes(Model model) {
@@ -61,6 +62,7 @@ public class InfanteWebController {
     public String verHistorialInfante(@PathVariable("id") Long id, Model model) {
         Infante infante = infanteService.obtenerPorId(id).orElseThrow();
         model.addAttribute("infante", infante);
+        model.addAttribute("actividades", actividadInfanteService.obtenerHistorialInfante(id));
         model.addAttribute("historial", asistenciaService.obtenerHistorialPorInfante(id));
         return "infantes-historial";
     }
@@ -99,17 +101,31 @@ public class InfanteWebController {
     public String cambiarEstadoRapido(@RequestParam("infanteId") Long infanteId,
             @RequestParam("nuevoEstado") String nuevoEstado) {
         Infante infante = infanteService.obtenerPorId(infanteId).orElseThrow();
+        String estadoAnterior = infante.getEstadoActual();
         infante.setEstadoActual(nuevoEstado);
         infanteService.actualizarInfante(infante);
 
         LocalDate hoy = LocalDate.now();
-        asistenciaService.listarPorFecha(hoy).stream()
+        var asistenciaActiva = asistenciaService.listarPorFecha(hoy).stream()
                 .filter(a -> a.getInfante().getId().equals(infanteId) && a.getHoraSalida() == null)
-                .findFirst()
-                .ifPresent(a -> {
-                    a.setBitacoraActividades(nuevoEstado);
-                    asistenciaService.actualizarAsistencia(a);
-                });
+                .findFirst();
+
+        asistenciaActiva.ifPresent(a -> {
+            a.setBitacoraActividades(nuevoEstado);
+            asistenciaService.actualizarAsistencia(a);
+        });
+
+        actividadInfanteService.registrarActividad(
+                infante,
+                asistenciaActiva.orElse(null),
+                TipoEventoActividad.CAMBIO_ESTADO,
+                estadoAnterior,
+                nuevoEstado,
+                "Cambio de estado del infante",
+                null,
+                true,
+                "PUSH",
+                PrioridadActividad.NORMAL);
 
         asistenciaService.enviarNotificacionATutor(infante,
                 "El estado de " + infante.getNombre() + " cambió a: " + nuevoEstado);
