@@ -62,6 +62,7 @@ public class InfanteWebController {
     public String verHistorialInfante(@PathVariable("id") Long id, Model model) {
         Infante infante = infanteService.obtenerPorId(id).orElseThrow();
         model.addAttribute("infante", infante);
+        model.addAttribute("actividades", actividadInfanteService.obtenerHistorialInfante(id));
         model.addAttribute("historial", asistenciaService.obtenerHistorialPorInfante(id));
         return "infantes-historial";
     }
