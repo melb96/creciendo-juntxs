@@ -54,24 +54,27 @@
             </div>
 
             <div>
-                <th:block th:with="totalHijos=${infantes != null ? infantes.size() : 0}, hijosAfuera=${infantes != null ? infantes.?[estadoActual == 'Sin Ingresar' || estadoActual == 'Retirado' || estadoActual == 'Ausente'].size() : 0}, todosAfuera=${totalHijos > 0 && totalHijos == hijosAfuera}">
-                    <div th:if="${!todosAfuera}">
-                        <div th:if="${streamConfigurado}">
-                            <div class="status-badge"><span class="rec-dot"></span> En Vivo - Transmitiendo</div>
-                            <div class="video-container">
-                                <iframe class="camera-frame"
-                                        th:src="${camaraStreamUrl}"
-                                        th:title="${camaraNombre}"
-                                        allow="autoplay; fullscreen"
-                                        allowfullscreen>
-                                </iframe>
-                            </div>
-                        </div>
-                        <div th:unless="${streamConfigurado}" class="stream-no-configurado">
-                            Stream de cámara no configurado
+                <th:block>
+                    <div th:if="${puedeVerCamara && streamConfigurado}">
+                        <div class="status-badge"><span class="rec-dot"></span> En Vivo - Transmitiendo</div>
+                        <div class="video-container">
+                            <iframe class="camera-frame"
+                                    th:src="${camaraStreamUrl}"
+                                    th:title="${camaraNombre}"
+                                    allow="autoplay; fullscreen"
+                                    allowfullscreen>
+                            </iframe>
                         </div>
                     </div>
-                    <div th:if="${todosAfuera}" class="camara-bloqueada">
+                    <div th:if="${!streamConfigurado}" class="stream-no-configurado">
+                        Stream de cámara no configurado
+                    </div>
+                    <div th:if="${streamConfigurado && !puedeVerCamara && esTutor}" class="camara-bloqueada">
+                        <span class="lock-icon">🔒</span>
+                        <h4>Transmisión Deshabilitada</h4>
+                        <p>El monitoreo no está disponible porque la sala monitoreada no cumple las condiciones de autorización requeridas.</p>
+                    </div>
+                    <div th:if="${streamConfigurado && !puedeVerCamara && !esTutor}" class="camara-bloqueada">
                         <span class="lock-icon">🔒</span>
                         <h4>Transmisión Deshabilitada</h4>
                     </div>
