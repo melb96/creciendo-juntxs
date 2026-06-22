@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.unlar.guarderia.Entitites.Asistencia;
 import com.unlar.guarderia.Entitites.Infante;
+import com.unlar.guarderia.Entitites.PrioridadActividad;
 import com.unlar.guarderia.Entitites.PushSubscription;
+import com.unlar.guarderia.Entitites.TipoEventoActividad;
 import com.unlar.guarderia.Repositories.AsistenciaRepository;
 import com.unlar.guarderia.Repositories.InfanteRepository;
 import com.unlar.guarderia.Repositories.PushSubscriptionRepository;
@@ -27,6 +29,7 @@ public class AsistenciaService {
     private final InfanteRepository infanteRepository;
     private final PushServiceConfig pushService;
     private final PushSubscriptionRepository pushRepo;
+    private final ActividadInfanteService actividadInfanteService;
 
     @Transactional
     public String registrarIngreso(Long infanteId) {
@@ -41,6 +44,7 @@ public class AsistenciaService {
         }
 
         Infante infante = infanteOpt.get();
+        String estadoAnterior = infante.getEstadoActual();
         infante.setEstadoActual("En Sala");
         infanteRepository.save(infante);
 
@@ -50,6 +54,18 @@ public class AsistenciaService {
         asistencia.setInfante(infante);
         asistencia.setBitacoraActividades("En Sala");
         asistenciaRepository.save(asistencia);
+
+        actividadInfanteService.registrarActividad(
+                infante,
+                asistencia,
+                TipoEventoActividad.INGRESO,
+                estadoAnterior,
+                "En Sala",
+                "Ingreso registrado en la guarderia",
+                null,
+                true,
+                "PUSH",
+                PrioridadActividad.NORMAL);
 
         enviarNotificacionATutor(infante, "Ingreso registrado: " + infante.getNombre() + " ya está en la sala.");
 
@@ -68,9 +84,13 @@ public class AsistenciaService {
 
         Optional<Infante> infanteOpt = infanteRepository.findById(infanteId);
         Infante infante = null;
+        String estadoAnterior = null;
+        String estadoFinal = null;
         if (infanteOpt.isPresent()) {
             infante = infanteOpt.get();
+            estadoAnterior = infante.getEstadoActual();
             infante.setEstadoActual("Sin Ingresar");
+            estadoFinal = infante.getEstadoActual();
             infanteRepository.saveAndFlush(infante);
         }
 
@@ -87,6 +107,17 @@ public class AsistenciaService {
         asistenciaRepository.saveAndFlush(asistencia);
         if (infante != null) {
             enviarNotificacionATutor(infante, "Egreso registrado: " + infante.getNombre() + " ha sido retirado.");
+            actividadInfanteService.registrarActividad(
+                    infante,
+                    asistencia,
+                    TipoEventoActividad.EGRESO,
+                    estadoAnterior,
+                    estadoFinal,
+                    "Egreso registrado de la guarderia",
+                    null,
+                    true,
+                    "PUSH",
+                    PrioridadActividad.NORMAL);
         }
         return "Egreso registrado con éxito. ¡El infante ya fue retirado!";
     }
@@ -129,6 +160,7 @@ public class AsistenciaService {
                 .orElseThrow(() -> new RuntimeException("Asistencia no encontrada"));
 
         Infante infante = asistencia.getInfante();
+        String estadoActual = infante.getEstadoActual();
 
         String horaFormateada = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
@@ -152,6 +184,17 @@ public class AsistenciaService {
         asistenciaRepository.save(asistencia);
 
         enviarNotificacionATutor(infante, "Alerta de Incidente registrada: " + nuevoReporte);
+        actividadInfanteService.registrarActividad(
+                infante,
+                asistencia,
+                TipoEventoActividad.ALERTA,
+                estadoActual,
+                estadoActual,
+                "Alerta prioritaria enviada al tutor",
+                null,
+                true,
+                "PUSH_WHATSAPP",
+                PrioridadActividad.ALTA);
     }
 
 }
